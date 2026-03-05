@@ -1,0 +1,1489 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - HookmeUp</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Your exact theme */
+            --primary: #b3004b;
+            --primary-dark: #7a0034;
+            --primary-light: #e63986;
+            --secondary: #8b0000;
+            --accent: #444;
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --text-light: #9ca3af;
+            --bg-primary: #0b0b0b;
+            --bg-secondary: #141414;
+            --bg-card: #1a1a1a;
+            --border: #2e2e2e;
+            --border-light: #3a3a3a;
+            --bg-light: #1b1b1b;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.8);
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Add to your CSS file */
+        .post-video-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .post-video {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            background: #000;
+        }
+
+        /* ========== FIXED POST ACTIONS - ALL BUTTONS IN ONE LINE ========== */
+        .post-actions {
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: nowrap !important;
+            gap: 5px !important;
+            padding: 12px 0 !important;
+            margin: 12px 0 0 0 !important;
+            border-top: 1px solid var(--border-light) !important;
+            border-bottom: none !important;
+            width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+        }
+
+        .post-actions::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        .vote-buttons {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 2px !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-radius: 30px !important;
+            padding: 2px !important;
+            flex-shrink: 0 !important;
+            margin-right: 2px !important;
+        }
+
+        .vote-btn {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            background: transparent !important;
+            border: none !important;
+            color: #b9bbbe !important;
+            font-size: 13px !important;
+            cursor: pointer !important;
+            padding: 6px 10px !important;
+            border-radius: 30px !important;
+            transition: all 0.2s ease !important;
+            min-width: 50px !important;
+            justify-content: center !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+        }
+
+        .vote-btn i {
+            font-size: 16px !important;
+        }
+
+        .vote-btn.up:hover {
+            background: rgba(52, 168, 83, 0.15) !important;
+            color: #34a853 !important;
+        }
+
+        .vote-btn.down:hover {
+            background: rgba(234, 67, 53, 0.15) !important;
+            color: #ea4335 !important;
+        }
+
+        .vote-btn.up.active {
+            color: #34a853 !important;
+            background: rgba(52, 168, 83, 0.2) !important;
+        }
+
+        .vote-btn.down.active {
+            color: #ea4335 !important;
+            background: rgba(234, 67, 53, 0.2) !important;
+        }
+
+        .vote-count {
+            font-weight: 600 !important;
+            min-width: 20px !important;
+            text-align: center !important;
+        }
+
+        .post-action {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            background: transparent !important;
+            border: none !important;
+            color: var(--text-light) !important;
+            font-size: 13px !important;
+            cursor: pointer !important;
+            padding: 6px 12px !important;
+            border-radius: 30px !important;
+            transition: all 0.2s ease !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+        }
+
+        .post-action:hover {
+            background: rgba(182, 0, 75, 0.1) !important;
+            color: var(--primary-light) !important;
+        }
+
+        .post-action.liked {
+            color: var(--secondary) !important;
+        }
+
+        .post-action.liked i {
+            color: var(--secondary) !important;
+        }
+
+        .post-action.active {
+            color: var(--primary-light) !important;
+        }
+
+        .post-action i {
+            font-size: 16px !important;
+        }
+
+        .like-count,
+        .comment-count {
+            font-weight: 500 !important;
+            font-size: 13px !important;
+        }
+
+        /* Post Item Container */
+        .post-item {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            background: var(--bg-card);
+            border-radius: ;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .post-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Post Header */
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .post-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+            flex-shrink: 0;
+        }
+
+        .post-author-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-author-info h4 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 2px;
+            display: block;
+        }
+
+        /* Follow Button */
+        .follow-btn-post {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            margin-left: auto;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .follow-btn-post:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(179, 0, 75, 0.3);
+        }
+
+        .follow-btn-post.following {
+            background: #10b981;
+        }
+
+        .follow-btn-post.following:hover {
+            background: #0da271;
+        }
+
+        .follow-btn-post i {
+            font-size: 12px;
+        }
+
+        .media-type-indicator {
+            margin-left: 10px;
+            color: var(--primary-light);
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        /* Post Content */
+        .post-content {
+            margin-bottom: 12px;
+        }
+
+        .post-caption {
+            color: var(--text-primary);
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 12px 0;
+            word-wrap: break-word;
+        }
+
+        /* Post Image */
+        .post-image-container {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 12px 0;
+            border: 1px solid var(--border);
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .post-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Video Styles */
+        .video-thumbnail-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            margin: 12px 0;
+        }
+
+        .video-thumbnail-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-thumbnail-container:hover .video-thumbnail-image {
+            transform: scale(1.05);
+        }
+
+        .video-play-button-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: rgba(179, 0, 75, 0.95);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .video-thumbnail-container:hover .video-play-button-center {
+            background: var(--primary);
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 8px 24px rgba(179, 0, 75, 0.6);
+            border-color: white;
+        }
+
+        .video-duration-overlay {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 2;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .video-info-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 3;
+        }
+
+        .video-info-badge i {
+            color: var(--primary-light);
+        }
+
+        /* Custom Video Player */
+        .custom-video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .custom-video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .custom-video-player::-webkit-media-controls {
+            display: none !important;
+        }
+
+        .video-controls-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-video-container:hover .video-controls-overlay {
+            opacity: 1;
+        }
+
+        .video-center-play-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(179, 0, 75, 0.95);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 3px solid rgba(255,255,255,0.5);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        .video-center-play-btn:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+            border-color: white;
+        }
+
+        .video-bottom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 20px 15px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .custom-video-container:hover .video-bottom-controls {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .control-bar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary-light);
+            border-radius: 3px;
+            width: 0%;
+            position: relative;
+            transition: width 0.1s linear;
+        }
+
+        .time-display {
+            font-size: 14px;
+            color: white;
+            font-family: monospace;
+            min-width: 90px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            width: 100%;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 16px;
+            display: none;
+            border-top: 1px solid var(--border-light);
+            padding-top: 16px;
+        }
+
+        .comments-section.expanded {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .add-comment {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .comment-input {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 8px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .comment-input:focus {
+            border-color: var(--primary-light);
+            background: var(--bg-card);
+        }
+
+        .send-comment-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 8px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .send-comment-btn:hover {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            transform: translateY(-1px);
+        }
+
+        .comments-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+
+        .comment-info {
+            flex: 1;
+        }
+
+        .comment-info strong {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .comment-time {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-left: 8px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-left: 40px;
+        }
+
+        .no-comments {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* WhatsApp-style Video Grid/Stories Section */
+        .video-grid-section {
+            padding: 1rem 0.75rem;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .stories-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stories-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 8px 4px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .stories-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story-item {
+            flex: 0 0 auto;
+            width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .story-item:hover {
+            transform: scale(1.05);
+        }
+
+        .story-avatar-container {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            margin-bottom: 6px;
+        }
+
+        .story-avatar-container.has-new::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            z-index: -1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .story-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--bg-primary);
+            background: var(--bg-card);
+        }
+
+        .add-story-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border: 3px solid var(--border);
+            color: var(--text-light);
+            font-size: 20px;
+        }
+
+        .story-username {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .story-item.has-new .story-username {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .story-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s, background 0.3s;
+        }
+
+        .stories-container:hover .story-nav-btn {
+            opacity: 1;
+        }
+
+        .story-nav-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .story-prev {
+            left: 5px;
+        }
+
+        .story-next {
+            right: 5px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 60px;
+            min-height: calc(100vh - 60px);
+            display: flex;
+            justify-content: center;
+            background: var(--bg-primary);
+        }
+
+        /* Posts Container */
+        .posts-container {
+            max-width: 600px;
+            width: 100%;
+            background: var(--bg-primary);
+        }
+
+        /* Header */
+        .posts-header {
+            position: sticky;
+            top: 60px;
+            z-index: 50;
+            background: var(--bg-primary);
+            padding: 1.5rem 1.25rem 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title .feather {
+            color: var(--primary-light);
+            width: 24px;
+            height: 24px;
+        }
+
+        .page-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        /* Create Post Button */
+        .create-post-container {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .create-post-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0.875rem 1.75rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.875rem;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(182, 0, 75, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .create-post-btn:hover {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(182, 0, 75, 0.4);
+        }
+
+        .create-post-btn .feather {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+        }
+
+        /* User Posts Header */
+        .user-posts-header {
+            display: none;
+            align-items: center;
+            gap: 1.25rem;
+            margin: 1rem 1.25rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .user-posts-header.active {
+            display: flex;
+        }
+
+        .user-posts-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+
+        .user-posts-info {
+            flex: 1;
+        }
+
+        .user-posts-info h2 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-posts-info p {
+            margin: 0.375rem 0 0 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 400;
+        }
+
+        /* Loading States */
+        .loading, .error, .no-posts {
+            text-align: center;
+            padding: 3rem 1.25rem;
+            color: var(--text-light);
+            font-size: 15px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .loading .feather {
+            width: 36px;
+            height: 36px;
+            margin-bottom: 0.75rem;
+            color: var(--primary-light);
+            display: block;
+            margin: 0 auto 0.75rem;
+        }
+
+        .error {
+            color: var(--secondary);
+        }
+
+        /* Loading Animation */
+        .post-item.loading {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-primary);
+        }
+
+        .loading-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            float: left;
+            margin-right: 12px;
+        }
+
+        .loading-content {
+            margin-left: 60px;
+        }
+
+        .loading-line {
+            height: 12px;
+            background: var(--bg-card);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .loading-line.short {
+            width: 40%;
+        }
+
+        .loading-line.medium {
+            width: 60%;
+        }
+
+        /* Load More Button */
+        .load-more-container {
+            text-align: center;
+            padding: 2rem 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .load-more-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            
+        }
+
+        .load-more-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(182, 0, 75, 0.3);
+        }
+
+        .load-more-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .load-more-btn .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            height: 60px;
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.5rem;
+            height: 100%;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1rem;
+            height: 100%;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 500;
+            gap: 0.25rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            min-width: 70px;
+            transition: var(--transition);
+        }
+
+        .nav-links:hover {
+            color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-links.active {
+            color: var(--primary-light);
+            background: rgba(182, 0, 75, 0.15);
+        }
+
+        .nav-links .feather {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            margin-bottom: 2px;
+        }
+
+        .notification-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .message-count {
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 0.65rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 4px;
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .bar {
+            width: 22px;
+            height: 2px;
+            background-color: var(--text-primary);
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 1px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .story-item {
+                width: 70px;
+            }
+            
+            .story-avatar-container {
+                width: 56px;
+                height: 56px;
+            }
+            
+            .story-username {
+                font-size: 10px;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: rgba(11, 11, 11, 0.98);
+                backdrop-filter: blur(20px);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: var(--shadow);
+                padding: 1rem 0;
+                gap: 0;
+                height: auto;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-item {
+                margin: 0.5rem 0;
+                height: auto;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
+            .posts-header {
+                padding: 1rem 1rem 0.75rem;
+            }
+
+            .post-item {
+                padding: 1rem;
+            }
+
+            .post-header {
+                flex-wrap: wrap;
+            }
+
+            .post-author-avatar {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .post-actions {
+                gap: 2px !important;
+                padding: 10px 0 !important;
+            }
+            
+            .vote-btn {
+                padding: 4px 6px !important;
+                min-width: 40px !important;
+                font-size: 12px !important;
+            }
+            
+            .vote-btn i {
+                font-size: 14px !important;
+            }
+            
+            .post-action {
+                padding: 4px 8px !important;
+                font-size: 12px !important;
+            }
+            
+            .post-action i {
+                font-size: 14px !important;
+            }
+
+            .story-item {
+                width: 65px;
+            }
+            
+            .story-avatar-container {
+                width: 52px;
+                height: 52px;
+            }
+            
+            .posts-header {
+                padding: 0.875rem 0.875rem 0.5rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .create-post-btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.813rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">HookmeUp</a>
+            
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="mingle.html" class="nav-links">
+                        <svg class="feather" data-feather="users">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Hook</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="messages.html" class="nav-links">
+                        <svg class="feather" data-feather="message-circle">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                        </svg>
+                        <span>Chat</span>
+                        <span class="message-count">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="posts.html" class="nav-links active">
+                        <svg class="feather" data-feather="book-open">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                        <span>Resources</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="account.html" class="nav-links">
+                        <svg class="feather" data-feather="user">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="notification.html" class="nav-links">
+                        <svg class="feather" data-feather="bell">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span>Notifications</span>
+                        <span class="notification-badge">0</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="posts-container">
+            <!-- Header -->
+            <div class="posts-header">
+                <div class="header-content">
+                    <h1 class="page-title">
+                        <svg class="feather" data-feather="book-open">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                        Resources
+                    </h1>
+                    <p class="page-subtitle">Discover  content, tutorials, and learning resources from experts</p>
+                </div>
+                <!-- Create Post Button -->
+                <div class="create-post-container">
+                    <a href="create.html" class="create-post-btn">
+                        <svg class="feather" data-feather="plus">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Share Resource
+                    </a>
+                </div>
+            </div>
+
+            <!-- WhatsApp-style Video Stories Section -->
+            <div class="video-grid-section" id="videoStoriesSection">
+                <!-- Stories will be loaded here by stream.js -->
+            </div>
+
+            <!-- User Posts Header -->
+            <div id="userPostsHeader" class="user-posts-header">
+                <img src="images/default-profile.jpg" alt="User" class="user-posts-avatar" id="userPostsAvatar">
+                <div class="user-posts-info">
+                    <h2 id="userPostsName">Educator's Resources</h2>
+                    <p id="userPostsBio">Viewing all educational content by this expert</p>
+                </div>
+            </div>
+
+            <!-- Twitter-like Feed -->
+            <div id="postsContainer" class="posts-feed">
+                <!-- Loading States -->
+                <div class="post-item loading">
+                    <div class="loading-avatar"></div>
+                    <div class="loading-content">
+                        <div class="loading-line" style="width: 60%"></div>
+                        <div class="loading-line short"></div>
+                        <div class="loading-line" style="width: 80%"></div>
+                        <div class="loading-line" style="width: 40%"></div>
+                    </div>
+                </div>
+                <div class="post-item loading">
+                    <div class="loading-avatar"></div>
+                    <div class="loading-content">
+                        <div class="loading-line" style="width: 60%"></div>
+                        <div class="loading-line short"></div>
+                        <div class="loading-line" style="width: 80%"></div>
+                        <div class="loading-line" style="width: 40%"></div>
+                    </div>
+                </div>
+                <div class="post-item loading">
+                    <div class="loading-avatar"></div>
+                    <div class="loading-content">
+                        <div class="loading-line" style="width: 60%"></div>
+                        <div class="loading-line short"></div>
+                        <div class="loading-line" style="width: 80%"></div>
+                        <div class="loading-line" style="width: 40%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Load More Posts Button -->
+            <div class="load-more-container">
+                <button id="loadMorePosts" class="load-more-btn">
+                    <i class="fas fa-plus"></i> Load More Posts
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Your JavaScript -->
+    <script type="module" src="social.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="notification.js"></script>
+    <!-- Add stream.js script -->
+    <script type="module" src="stream.js"></script>
+    
+    <script>
+        // Initialize Feather Icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+
+        });
+        
+
+        // Helper function for your JavaScript
+        window.clearLoadingStates = function() {
+            const postsContainer = document.getElementById('postsContainer');
+            if (postsContainer) {
+                const loadingItems = postsContainer.querySelectorAll('.post-item.loading');
+                loadingItems.forEach(item => item.remove());
+            }
+        };
+    </script>
+</body>
+</html>

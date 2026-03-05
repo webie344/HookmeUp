@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - BondBase</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      /* BDSM Dark Theme Colors */
+      --primary: #b3004b; /* deep crimson */
+      --primary-dark: #7a0034;
+      --primary-light: #e63986;
+      --secondary: #8b0000; /* dark red */
+      --accent: #444; /* metal/steel tone */
+      --text-primary: #ffffff;
+      --text-secondary: #d1d5db;
+      --text-light: #9ca3af;
+      --bg-primary: #0b0b0b; /* deep black */
+      --bg-secondary: #141414;
+      --bg-card: #1a1a1a;
+      --border: #2e2e2e;
+      --border-light: #3a3a3a;
+      
+      /* Theme variables */
+      --primary-color: var(--primary);
+      --bg-color: var(--bg-primary);
+      --card-bg: var(--bg-card);
+      --text-color: var(--text-primary);
+      --text-muted: var(--text-secondary);
+      --border-color: var(--border);
+      --border-radius: 12px;
+      --transition: all 0.3s ease;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -1px rgba(0, 0, 0, 0.7);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.8), 0 4px 6px -2px rgba(0, 0, 0, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg-color);
+      color: var(--text-color);
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(179, 0, 75, 0.05) 0%, transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(139, 0, 0, 0.05) 0%, transparent 25%);
+      overflow-x: hidden;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 450px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Download Section Styles */
+    .download-section {
+      background-color: var(--card-bg);
+      padding: 25px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      margin-bottom: 25px;
+      text-align: center;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    .download-title {
+      font-size: 20px;
+      color: var(--primary-light);
+      margin-bottom: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .download-title i {
+      font-size: 22px;
+    }
+
+    .download-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 25px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      flex: 1;
+      min-width: 120px;
+      box-shadow: var(--shadow);
+    }
+
+    .android-btn {
+      background: linear-gradient(135deg, #3DDC84, #2BB673);
+      color: #0b0b0b;
+    }
+
+    .android-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(61, 220, 132, 0.3);
+    }
+
+    .ios-btn {
+      background: linear-gradient(135deg, #007AFF, #0056CC);
+      color: white;
+    }
+
+    .ios-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 122, 255, 0.3);
+    }
+
+    .download-btn i {
+      font-size: 20px;
+    }
+
+    .ios-info {
+      background: rgba(139, 0, 0, 0.1);
+      border: 1px solid rgba(220, 20, 60, 0.2);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .ios-info h4 {
+      color: var(--primary-light);
+      margin-bottom: 10px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ios-info h4 i {
+      font-size: 16px;
+    }
+
+    .ios-info p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .ios-steps {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 10px 0;
+    }
+
+    .ios-steps li {
+      margin-bottom: 8px;
+      padding-left: 20px;
+      position: relative;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .ios-steps li:before {
+      content: "•";
+      color: var(--primary);
+      font-size: 16px;
+      position: absolute;
+      left: 0;
+      top: -2px;
+    }
+
+    .coming-soon {
+      color: #3DDC84;
+      font-weight: 600;
+      font-size: 12px;
+      margin-top: 5px;
+      display: block;
+    }
+
+    /* Animated Login Container */
+    .animated-login {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+      height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Lock Animation */
+    .lock-container {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto;
+    }
+
+    .lock-circle {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(179, 0, 75, 0.1), rgba(139, 0, 0, 0.1));
+      border: 2px solid rgba(179, 0, 75, 0.2);
+      top: 0;
+      left: 0;
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    .lock-body {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 20px;
+      top: 40px;
+      left: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: var(--shadow-lg);
+      animation: bounce 2s infinite ease-in-out;
+      z-index: 2;
+    }
+
+    .lock-shackle {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border: 10px solid var(--primary-light);
+      border-radius: 50%;
+      top: 20px;
+      left: 55px;
+      border-bottom-color: transparent;
+      border-right-color: transparent;
+      border-left-color: transparent;
+      transform: rotate(45deg);
+      animation: shackleMove 2.5s infinite ease-in-out;
+      z-index: 1;
+    }
+
+    .keyhole {
+      width: 20px;
+      height: 30px;
+      background: var(--bg-card);
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .keyhole::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: var(--bg-card);
+      border-radius: 50%;
+      top: 5px;
+      left: 5px;
+    }
+
+    /* Floating Particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--primary-light);
+      opacity: 0.7;
+      z-index: 0;
+    }
+
+    .particle-1 {
+      width: 10px;
+      height: 10px;
+      top: 20px;
+      left: 30px;
+      animation: float 8s infinite ease-in-out;
+    }
+
+    .particle-2 {
+      width: 8px;
+      height: 8px;
+      top: 60px;
+      right: 40px;
+      animation: float 6s infinite ease-in-out 1s;
+    }
+
+    .particle-3 {
+      width: 12px;
+      height: 12px;
+      bottom: 30px;
+      left: 50px;
+      animation: float 7s infinite ease-in-out 0.5s;
+    }
+
+    .particle-4 {
+      width: 6px;
+      height: 6px;
+      bottom: 50px;
+      right: 30px;
+      animation: float 9s infinite ease-in-out 1.5s;
+    }
+
+    /* Connection Lines */
+    .connection-line {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      opacity: 0.5;
+    }
+
+    .line-1 {
+      width: 80px;
+      top: 40px;
+      left: 0;
+      animation: linePulse 4s infinite ease-in-out;
+    }
+
+    .line-2 {
+      width: 60px;
+      bottom: 40px;
+      right: 0;
+      animation: linePulse 4s infinite ease-in-out 1s;
+    }
+
+    /* Animations */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+
+    @keyframes shackleMove {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50% { transform: rotate(45deg) translateY(-5px); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      25% { transform: translateY(-10px) translateX(5px); }
+      50% { transform: translateY(-5px) translateX(10px); }
+      75% { transform: translateY(-15px) translateX(-5px); }
+    }
+
+    @keyframes linePulse {
+      0%, 100% { opacity: 0.3; width: 60px; }
+      50% { opacity: 0.7; width: 80px; }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200px 0; }
+      100% { background-position: 200px 0; }
+    }
+
+    /* Welcome Text Animation */
+    .welcome-text {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-top: 10px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-text span {
+      display: inline-block;
+      position: relative;
+    }
+
+    .welcome-text span::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    /* Form Section */
+    .form-section {
+      background-color: var(--card-bg);
+      padding: 30px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-section h2 {
+      font-size: 26px;
+      margin-bottom: 8px;
+      color: var(--primary-light);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .form-section p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    input {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      background: var(--bg-primary);
+      font-size: 16px;
+      color: var(--text-primary);
+      transition: var(--transition);
+      width: 100%;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(179, 0, 75, 0.2);
+    }
+
+    input::placeholder {
+      color: var(--text-light);
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-secondary);
+      background: none;
+      border: none;
+      padding: 5px;
+      border-radius: 4px;
+      transition: var(--transition);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .toggle-password:hover {
+      color: var(--primary-light);
+      background-color: rgba(179, 0, 75, 0.1);
+    }
+
+    button {
+      padding: 14px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      color: var(--text-primary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 10px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, var(--primary-dark), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    .forgot-link {
+      text-align: right;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    .forgot-link a {
+      color: var(--primary-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .forgot-link a:hover {
+      text-decoration: underline;
+      color: var(--primary);
+    }
+
+    .auth-footer {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .auth-footer a {
+      color: var(--primary-light);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .auth-footer a:hover {
+      text-decoration: underline;
+      color: var(--primary);
+    }
+
+    .terms {
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--text-light);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .terms a {
+      color: var(--primary-light);
+      text-decoration: underline;
+      transition: var(--transition);
+    }
+
+    .terms a:hover {
+      color: var(--primary);
+    }
+
+    /* Loading state */
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Error states */
+    .error {
+      border-color: var(--secondary) !important;
+      box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.2) !important;
+    }
+
+    .error-message {
+      color: var(--secondary);
+      font-size: 12px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    /* Brand styling */
+    .brand {
+      text-align: center;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .brand-text {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 20px rgba(179, 0, 75, 0.3);
+      margin-bottom: 10px;
+    }
+
+    .brand-tagline {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+    }
+
+    @media screen and (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+      
+      .form-section {
+        padding: 20px;
+      }
+      
+      .lock-container {
+        width: 150px;
+        height: 150px;
+      }
+      
+      .lock-circle {
+        width: 150px;
+        height: 150px;
+      }
+      
+      .lock-body {
+        width: 80px;
+        height: 80px;
+        top: 35px;
+        left: 35px;
+      }
+      
+      .lock-shackle {
+        width: 60px;
+        height: 60px;
+        top: 15px;
+        left: 45px;
+      }
+      
+      .form-section h2 {
+        font-size: 22px;
+      }
+      
+      .animated-login {
+        height: 150px;
+      }
+      
+      .download-section {
+        padding: 20px;
+      }
+      
+      .download-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .download-btn {
+        width: 100%;
+      }
+      
+      .brand-text {
+        font-size: 28px;
+      }
+    }
+
+    @media screen and (max-width: 350px) {
+      .download-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+      
+      .download-btn i {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-text">BondBase</div>
+      <div class="brand-tagline">Anonymous Social Gaming Platform</div>
+    </div>
+
+    <!-- Download Section -->
+    <div class="download-section">
+      <div class="download-title">
+        <i class="fas fa-mobile-alt"></i>
+        Download BondBase App
+      </div>
+      
+      <div class="download-buttons">
+        <a href="https://median.co/share/qddyxpb#apk" target="_blank" class="download-btn android-btn">
+          <i class="fab fa-android"></i>
+          <span>Android</span>
+        </a>
+        
+        <a href="#" class="download-btn ios-btn" id="iosBtn">
+          <i class="fab fa-apple"></i>
+          <span>iOS</span>
+        </a>
+      </div>
+
+      <div class="ios-info">
+        <h4><i class="fas fa-info-circle"></i> For iOS Users</h4>
+        <p>The BondBase iOS app will be available on the App Store very soon!</p>
+        <p>In the meantime, you can use BondBase in Safari and add it to your home screen:</p>
+        
+        <ul class="ios-steps">
+          <li>Open Safari and go to this page</li>
+          <li>Tap the share button at the bottom</li>
+          <li>Scroll and tap "Add to Home Screen"</li>
+          <li>Name it "BondBase" and tap "Add"</li>
+        </ul>
+        
+        <span class="coming-soon">Coming soon to the App Store!</span>
+      </div>
+    </div>
+
+    <!-- Animated Login Illustration -->
+    <div class="animated-login">
+      <div class="lock-container">
+        <div class="lock-circle"></div>
+        <div class="lock-shackle"></div>
+        <div class="lock-body">
+          <div class="keyhole"></div>
+        </div>
+        
+        <!-- Floating Particles -->
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        
+        <!-- Connection Lines -->
+        <div class="connection-line line-1"></div>
+        <div class="connection-line line-2"></div>
+      </div>
+    </div>
+
+    <!-- Welcome Text -->
+    <div class="welcome-text">
+      <span>Unlock Your Secret Connections</span>
+    </div>
+
+    <!-- Login Form -->
+    <div class="form-section">
+      <h2>Log In</h2>
+      <p>Welcome to BondBase — your secure space for meaningful connections</p>
+      
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <div class="error-message" id="emailError">Please enter a valid email address</div>
+
+        <div class="password-wrapper">
+          <input type="password" id="loginPassword" placeholder="Password" required>
+          <button type="button" class="toggle-password" onclick="togglePassword('loginPassword', this)">👁️</button>
+        </div>
+        <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
+
+        <div class="forgot-link">
+          <a href="forgot-password.html">Forgot Password?</a>
+        </div>
+
+        <button type="submit" id="loginButton">Login</button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="signup.html">Sign up</a>
+      </div>
+
+      <div class="terms">
+        By continuing, you agree to our <a href="policy.html">Privacy Policy</a>, <a href="terms.html">Terms of Service</a>, and <a href="about.html">Community Guidelines</a>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // iOS Button Handler
+    document.getElementById('iosBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Create modal or alert with iOS instructions
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      
+      let message = "📱 BondBase iOS App Coming Soon!\n\n";
+      
+      if (isIOS && isSafari) {
+        message += "You're using Safari on iOS! Here's how to add BondBase to your home screen:\n\n" +
+                  "1. Tap the share button at the bottom\n" +
+                  "2. Scroll down and tap 'Add to Home Screen'\n" +
+                  "3. Name it 'BondBase' and tap 'Add'\n\n" +
+                  "You'll have BondBase as an app icon on your home screen! 🎮";
+      } else {
+        message += "The native iOS app will be available on the App Store very soon!\n\n" +
+                  "In the meantime:\n" +
+                  "1. Open this page in Safari on your iPhone/iPad\n" +
+                  "2. Tap the share button\n" +
+                  "3. Tap 'Add to Home Screen'\n" +
+                  "4. Name it 'BondBase' and tap Add\n\n" +
+                  "You'll have BondBase as an app icon on your home screen! 🎮";
+      }
+      
+      alert(message);
+    });
+
+    function togglePassword(id, el) {
+      const input = document.getElementById(id);
+      if (input.type === "password") {
+        input.type = "text";
+        el.textContent = "🙈";
+      } else {
+        input.type = "password";
+        el.textContent = "👁️";
+      }
+    }
+
+    // Ripple effect for buttons
+    document.querySelectorAll('button').forEach(button => {
+      button.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+
+    // Form validation and submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail');
+      const password = document.getElementById('loginPassword');
+      const loginButton = document.getElementById('loginButton');
+      const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
+      
+      let isValid = true;
+      
+      // Reset errors
+      email.classList.remove('error');
+      password.classList.remove('error');
+      emailError.style.display = 'none';
+      passwordError.style.display = 'none';
+      
+      // Email validation
+      if (!email.value || !email.value.includes('@')) {
+        email.classList.add('error');
+        emailError.style.display = 'block';
+        isValid = false;
+      }
+      
+      // Password validation
+      if (!password.value || password.value.length < 6) {
+        password.classList.add('error');
+        passwordError.style.display = 'block';
+        isValid = false;
+      }
+      
+      if (isValid) {
+        // Show loading state
+        loginButton.classList.add('loading');
+        loginButton.disabled = true;
+        loginButton.innerHTML = 'Logging in...';
+        
+        // Add login animation to the lock
+        const lockBody = document.querySelector('.lock-body');
+        const lockShackle = document.querySelector('.lock-shackle');
+        
+        // Unlock animation
+        lockBody.style.animation = 'bounce 0.5s ease-in-out';
+        lockShackle.style.animation = 'none';
+        lockShackle.style.transform = 'rotate(0deg) translateY(-10px)';
+        
+        // Simulate login process
+        setTimeout(() => {
+          // Here you would typically make an API call to your authentication service
+          console.log('Login attempt with:', email.value);
+          
+          // For demo purposes, always succeed
+          loginButton.classList.remove('loading');
+          loginButton.disabled = false;
+          loginButton.innerHTML = 'Login';
+          
+          // Reset lock animation
+          lockBody.style.animation = 'bounce 2s infinite ease-in-out';
+          lockShackle.style.animation = 'shackleMove 2.5s infinite ease-in-out';
+          
+          // Redirect to dashboard or show success
+          window.location.href = 'mingle.html';
+        }, 1500);
+      }
+    });
+
+    // Real-time validation
+    document.getElementById('loginEmail').addEventListener('input', function() {
+      this.classList.remove('error');
+      document.getElementById('emailError').style.display = 'none';
+    });
+
+    document.getElementById('loginPassword').addEventListener('input', function() {
+      this.classList.remove('error');
+      document.getElementById('passwordError').style.display = 'none';
+    });
+
+    // Interactive lock animation on hover
+    const lockBody = document.querySelector('.lock-body');
+    const lockCircle = document.querySelector('.lock-circle');
+    
+    lockBody.addEventListener('mouseenter', function() {
+      this.style.transform = 'scale(1.1)';
+      lockCircle.style.transform = 'scale(1.1)';
+    });
+    
+    lockBody.addEventListener('mouseleave', function() {
+      this.style.transform = 'scale(1)';
+      lockCircle.style.transform = 'scale(1)';
+    });
+
+    // Detect iOS and show specific message
+    document.addEventListener('DOMContentLoaded', function() {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const iosInfo = document.querySelector('.ios-info p');
+      
+      if (isIOS) {
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        
+        if (isSafari) {
+          iosInfo.innerHTML = 'You\'re using Safari on iOS! Follow these steps to add BondBase to your home screen:';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

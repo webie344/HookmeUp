@@ -1,0 +1,961 @@
+<!-- post.html - Full Page Post Display with Enhanced Video Player -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post · Mingle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #000;
+            color: #e7e9ea;
+            line-height: 1.5;
+        }
+
+        .post-full-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #000;
+        }
+
+        /* Header */
+        .post-header-bar {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: none;
+            color: #ff4b6e;
+            font-size: 20px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+            margin-right: 16px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 75, 110, 0.1);
+        }
+
+        .post-header-bar h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            flex: 1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-btn {
+            background: transparent;
+            border: none;
+            color: #6b6f76;
+            font-size: 20px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ff4b6e;
+        }
+
+        /* Main Post Content */
+        .post-main {
+            padding: 20px 16px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .post-author-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .post-author-avatar-large {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid #ff4b6e;
+            transition: transform 0.2s;
+        }
+
+        .post-author-avatar-large:hover {
+            transform: scale(1.05);
+        }
+
+        .post-author-details {
+            flex: 1;
+        }
+
+        .post-author-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ff4b6e;
+            cursor: pointer;
+            margin-bottom: 4px;
+        }
+
+        .post-author-name:hover {
+            text-decoration: underline;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6b6f76;
+            font-size: 14px;
+        }
+
+        .post-time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .post-time i {
+            font-size: 12px;
+        }
+
+        .post-follow-btn {
+            background: transparent;
+            border: 1px solid #ff4b6e;
+            color: #ff4b6e;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .post-follow-btn:hover {
+            background: #ff4b6e;
+            color: white;
+        }
+
+        .post-follow-btn.following {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        /* Caption */
+        .post-caption-large {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #fff;
+            margin: 20px 0 24px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            padding: 0 4px;
+        }
+
+        /* Enhanced Video Player - BIGGER! */
+        .post-video-container {
+            width: 100%;
+            background: #000;
+            border-radius: 24px;
+            overflow: hidden;
+            margin: 16px 0 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-player-wrapper {
+            position: relative;
+            width: 100%;
+            background: #000;
+        }
+
+        .video-player-wrapper video {
+            width: 100%;
+            max-height: 70vh;
+            min-height: 500px;
+            object-fit: contain;
+            display: block;
+            background: #000;
+            cursor: pointer;
+        }
+
+        /* Custom video controls */
+        .video-controls-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 30px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .video-player-wrapper:hover .video-controls-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .video-progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .video-progress-fill {
+            height: 100%;
+            background: #ff4b6e;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .video-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: white;
+        }
+
+        .video-control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .video-control-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .video-time-display {
+            font-size: 14px;
+            font-family: monospace;
+            color: white;
+            min-width: 100px;
+        }
+
+        .video-volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .video-volume-fill {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            width: 100%;
+        }
+
+        .fullscreen-btn {
+            margin-left: auto;
+        }
+
+        /* Big center play button */
+        .video-big-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 75, 110, 0.95);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 4px solid rgba(255,255,255,0.5);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .video-big-play-btn:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: #ff4b6e;
+            border-color: white;
+        }
+
+        /* Image Display */
+        .post-image-large {
+            width: 100%;
+            max-height: 70vh;
+            min-height: 400px;
+            object-fit: contain;
+            border-radius: 24px;
+            margin: 16px 0 24px;
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Poll Display */
+        .post-poll-large {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            padding: 24px;
+            margin: 16px 0 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .poll-question-large {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .poll-option-large {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .poll-option-content-large {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 2;
+        }
+
+        .poll-option-content-large:hover {
+            border-color: #ff4b6e;
+            background: rgba(255, 75, 110, 0.1);
+        }
+
+        .poll-progress-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: rgba(255, 75, 110, 0.15);
+            border-radius: 9999px;
+            transition: width 0.5s ease;
+            z-index: 1;
+        }
+
+        .poll-option-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            position: relative;
+            z-index: 3;
+        }
+
+        .poll-checkmark-large {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid #6b6f76;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .poll-option-content-large.voted .poll-checkmark-large {
+            background: #ff4b6e;
+            border-color: #ff4b6e;
+        }
+
+        .poll-checkmark-large i {
+            color: white;
+            font-size: 14px;
+            display: none;
+        }
+
+        .poll-option-content-large.voted .poll-checkmark-large i {
+            display: inline;
+        }
+
+        .poll-option-text {
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .poll-option-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .poll-percentage-large {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ff4b6e;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .poll-count-large {
+            font-size: 14px;
+            color: #6b6f76;
+            min-width: 40px;
+        }
+
+        .poll-footer-large {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #6b6f76;
+        }
+
+        /* Stats Bar */
+        .post-stats-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 12px;
+        }
+
+        .stats-left {
+            display: flex;
+            gap: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #6b6f76;
+            font-size: 14px;
+        }
+
+        .stat-item i {
+            font-size: 16px;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .vote-stats {
+            display: flex;
+            gap: 16px;
+        }
+
+        .vote-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .vote-stat.up i {
+            color: #34a853;
+        }
+
+        .vote-stat.down i {
+            color: #ea4335;
+        }
+
+        /* Action Buttons */
+        .post-action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .action-btn-large {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            color: #6b6f76;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 24px;
+            border-radius: 9999px;
+            transition: all 0.2s;
+        }
+
+        .action-btn-large i {
+            font-size: 20px;
+        }
+
+        .action-btn-large:hover {
+            background: rgba(255, 75, 110, 0.1);
+            color: #ff4b6e;
+        }
+
+        .action-btn-large.liked {
+            color: #ff4b6e;
+        }
+
+        .action-btn-large.liked i {
+            color: #ff4b6e;
+        }
+
+        .vote-btn-large {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            color: #6b6f76;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 8px 20px;
+            border-radius: 9999px;
+            transition: all 0.2s;
+        }
+
+        .vote-btn-large i {
+            font-size: 20px;
+        }
+
+        .vote-btn-large.up:hover {
+            background: rgba(52, 168, 83, 0.1);
+            color: #34a853;
+        }
+
+        .vote-btn-large.down:hover {
+            background: rgba(234, 67, 53, 0.1);
+            color: #ea4335;
+        }
+
+        .vote-btn-large.up.active {
+            color: #34a853;
+        }
+
+        .vote-btn-large.down.active {
+            color: #ea4335;
+        }
+
+        /* Comments Section */
+        .comments-section-large {
+            margin-top: 24px;
+        }
+
+        .comments-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .comments-header h2 {
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .comment-count-badge {
+            background: rgba(255, 75, 110, 0.2);
+            color: #ff4b6e;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 14px;
+        }
+
+        .add-comment-large {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            padding: 4px 4px 4px 16px;
+        }
+
+        .add-comment-large input {
+            flex: 1;
+            padding: 14px 0;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .add-comment-large button {
+            background: #ff4b6e;
+            border: none;
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-comment-large button:hover {
+            transform: scale(1.1);
+        }
+
+        .comments-list-large {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .comment-item-large {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .comment-header-large {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .comment-avatar-large {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .comment-info-large {
+            flex: 1;
+        }
+
+        .comment-author-name {
+            font-weight: 600;
+            color: #ff4b6e;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .comment-author-name:hover {
+            text-decoration: underline;
+        }
+
+        .comment-time-large {
+            font-size: 12px;
+            color: #6b6f76;
+            margin-left: 8px;
+        }
+
+        .comment-text-large {
+            font-size: 15px;
+            color: #e7e9ea;
+            margin-left: 52px;
+            word-wrap: break-word;
+        }
+
+        .comment-reply-btn {
+            margin-left: 52px;
+            margin-top: 8px;
+            background: transparent;
+            border: none;
+            color: #6b6f76;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .comment-reply-btn:hover {
+            background: rgba(255, 75, 110, 0.1);
+            color: #ff4b6e;
+        }
+
+        .no-comments {
+            text-align: center;
+            padding: 40px;
+            color: #6b6f76;
+            font-style: italic;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b6f76;
+        }
+
+        .loading i {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #dc2626;
+        }
+
+        .error-message i {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .btn-primary {
+            background: #ff4b6e;
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 9999px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .post-main {
+                padding: 16px 12px;
+            }
+            
+            .video-player-wrapper video {
+                min-height: 350px;
+            }
+            
+            .video-big-play-btn {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+            
+            .action-btn-large {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .action-btn-large i {
+                font-size: 18px;
+            }
+            
+            .stats-left {
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .post-author-avatar-large {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .video-player-wrapper video {
+                min-height: 250px;
+            }
+            
+            .video-big-play-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            
+            .post-action-bar {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .action-btn-large {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="post-full-container">
+        <div class="post-header-bar">
+            <button class="back-btn" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1>Post</h1>
+            <div class="header-actions">
+                <button class="header-btn" onclick="window.location.href='posts.html'">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button class="header-btn" onclick="window.location.href='create.html'">
+                    <i class="fas fa-feather"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="post-main" id="postContent">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading post...</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        
+        // Wait for socialManager to be available
+        function waitForSocialManager() {
+            return new Promise((resolve) => {
+                if (window.socialManager) {
+                    resolve(window.socialManager);
+                } else {
+                    const checkInterval = setInterval(() => {
+                        if (window.socialManager) {
+                            clearInterval(checkInterval);
+                            resolve(window.socialManager);
+                        }
+                    }, 100);
+                    
+                    // Timeout after 5 seconds
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        resolve(null);
+                    }, 5000);
+                }
+            });
+        }
+
+        async function loadPost() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+            
+            if (!postId) {
+                document.getElementById('postContent').innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>No post specified</p>
+                        <button class="btn-primary" onclick="window.location.href='posts.html'">
+                            Back to Posts
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const social = await waitForSocialManager();
+            
+            if (!social) {
+                document.getElementById('postContent').innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Failed to load social features. Please refresh the page.</p>
+                        <button class="btn-primary" onclick="location.reload()">
+                            Refresh
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Use the social manager's openPostModal method to load and display the post
+            // But we need to adapt it for full page view
+            try {
+                const auth = getAuth();
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        await social.openPostModal(postId);
+                    } else {
+                        window.location.href = 'login.html';
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading post:', error);
+                document.getElementById('postContent').innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error loading post: ${error.message}</p>
+                        <button class="btn-primary" onclick="window.location.href='posts.html'">
+                            Back to Posts
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Start loading the post
+        loadPost();
+
+        // Override the modal's close function to navigate back
+        window.closePostModal = function() {
+            window.history.back();
+        };
+    </script>
+</body>
+</html>

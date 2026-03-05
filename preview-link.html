@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Link Preview - No API Keys Needed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .link-input {
+            width: 100%;
+            padding: 20px 24px;
+            font-size: 18px;
+            border: 3px solid #e5e7eb;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .link-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            background: white;
+            box-shadow: 0 5px 20px rgba(79, 70, 229, 0.1);
+        }
+
+        .link-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        /* Preview Styles */
+        .preview-container {
+            display: none;
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .preview-container.show {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            background: #f9fafb;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e5e7eb;
+            border-top-color: #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .preview-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e5e7eb;
+            animation: slideUp 0.5s ease;
+        }
+
+        .preview-image-container {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .preview-image.show {
+            display: block;
+        }
+
+        .default-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .preview-content {
+            padding: 30px;
+        }
+
+        .preview-title {
+            font-size: 1.8rem;
+            color: #1f2937;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .preview-description {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .preview-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .favicon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .preview-url {
+            flex: 1;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .preview-url:hover {
+            text-decoration: underline;
+        }
+
+        .visit-btn {
+            padding: 10px 20px;
+            background: #4f46e5;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .visit-btn:hover {
+            background: #3a32c4;
+            transform: translateY(-2px);
+        }
+
+        /* Error Styles */
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #dc2626;
+            margin-top: 20px;
+            display: none;
+            animation: shake 0.5s ease;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Recent Links */
+        .recent-links {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f3f4f6;
+            display: none;
+        }
+
+        .recent-links.show {
+            display: block;
+        }
+
+        .recent-links h3 {
+            color: #374151;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .recent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .recent-item {
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .recent-item:hover {
+            background: #f3f4f6;
+            transform: translateX(5px);
+        }
+
+        .recent-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .recent-url {
+            flex: 1;
+            color: #374151;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .preview-image-container {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Real Link Preview Fetcher</h1>
+            <p>Paste any URL to fetch and preview its real content</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="linkInput" 
+                        class="link-input" 
+                        placeholder="https://example.com"
+                        autocomplete="off"
+                        autofocus
+                    >
+                </div>
+                
+                <div class="buttons">
+                    <button id="previewBtn" class="btn btn-primary">
+                        <span>🚀</span> Fetch Real Preview
+                    </button>
+                    <button id="clearBtn" class="btn btn-secondary">
+                        <span>🗑️</span> Clear
+                    </button>
+                </div>
+            </div>
+            
+            <div id="previewContainer" class="preview-container">
+                <div id="loading" class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Visiting website and fetching real preview data...</p>
+                </div>
+                
+                <div id="previewCard" class="preview-card" style="display: none;">
+                    <div class="preview-image-container">
+                        <div class="default-image" id="defaultImage">🌐</div>
+                        <img id="previewImage" class="preview-image" alt="Website Preview">
+                    </div>
+                    <div class="preview-content">
+                        <h2 id="previewTitle" class="preview-title"></h2>
+                        <p id="previewDescription" class="preview-description"></p>
+                        <div class="preview-meta">
+                            <img id="favicon" class="favicon" alt="Favicon" style="display: none;">
+                            <a id="previewUrl" class="preview-url" target="_blank" rel="noopener noreferrer"></a>
+                            <a id="visitLink" class="visit-btn" target="_blank" rel="noopener noreferrer">
+                                Visit Site →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="errorMessage" class="error-message">
+                <strong>⚠️ Error:</strong> <span id="errorText"></span>
+            </div>
+            
+            <div id="recentLinks" class="recent-links">
+                <h3>📚 Recently Previewed Links</h3>
+                <div id="recentList" class="recent-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class RealLinkPreview {
+            constructor() {
+                // DOM Elements
+                this.linkInput = document.getElementById('linkInput');
+                this.previewBtn = document.getElementById('previewBtn');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.previewContainer = document.getElementById('previewContainer');
+                this.loadingElement = document.getElementById('loading');
+                this.previewCard = document.getElementById('previewCard');
+                this.previewImage = document.getElementById('previewImage');
+                this.defaultImage = document.getElementById('defaultImage');
+                this.previewTitle = document.getElementById('previewTitle');
+                this.previewDescription = document.getElementById('previewDescription');
+                this.favicon = document.getElementById('favicon');
+                this.previewUrl = document.getElementById('previewUrl');
+                this.visitLink = document.getElementById('visitLink');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.errorText = document.getElementById('errorText');
+                this.recentLinks = document.getElementById('recentLinks');
+                this.recentList = document.getElementById('recentList');
+                
+                // Configuration
+                this.CORS_PROXY = 'https://corsproxy.io/?';
+                this.MAX_DESCRIPTION_LENGTH = 200;
+                this.RECENT_STORAGE_KEY = 'linkPreviewHistory';
+                
+                this.init();
+            }
+            
+            init() {
+                // Auto-detect paste
+                this.linkInput.addEventListener('paste', (e) => {
+                    setTimeout(() => {
+                        const url = this.linkInput.value.trim();
+                        if (this.isValidUrl(url)) {
+                            this.fetchPreview(url);
+                        }
+                    }, 100);
+                });
+                
+                // Preview button click
+                this.previewBtn.addEventListener('click', () => {
+                    const url = this.linkInput.value.trim();
+                    if (url) {
+                        this.fetchPreview(url);
+                    } else {
+                        this.showError('Please enter a URL');
+                    }
+                });
+                
+                // Clear button
+                this.clearBtn.addEventListener('click', () => this.clearAll());
+                
+                // Enter key support
+                this.linkInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        const url = this.linkInput.value.trim();
+                        if (url) {
+                            this.fetchPreview(url);
+                        }
+                    }
+                });
+                
+                // Load recent links from localStorage
+                this.loadRecentLinks();
+                
+                // Focus input on load
+                this.linkInput.focus();
+            }
+            
+            isValidUrl(url) {
+                try {
+                    const urlObj = new URL(url);
+                    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+                } catch {
+                    return false;
+                }
+            }
+            
+            async fetchPreview(url) {
+                // Validate URL
+                if (!this.isValidUrl(url)) {
+                    this.showError('Please enter a valid URL (must start with http:// or https://)');
+                    return;
+                }
+                
+                // Show loading state
+                this.showLoading();
+                this.hideError();
+                
+                try {
+                    // Use CORS proxy to bypass CORS restrictions
+                    const proxyUrl = `${this.CORS_PROXY}${encodeURIComponent(url)}`;
+                    
+                    // Fetch the website HTML
+                    const response = await fetch(proxyUrl, {
+                        headers: {
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                        },
+                        timeout: 10000
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch website (Status: ${response.status})`);
+                    }
+                    
+                    const html = await response.text();
+                    
+                    // Parse the HTML to extract metadata
+                    const previewData = this.extractMetadata(html, url);
+                    
+                    // Display the preview
+                    this.displayPreview(previewData);
+                    
+                    // Save to history
+                    this.saveToHistory(url, previewData);
+                    
+                } catch (error) {
+                    console.error('Error fetching preview:', error);
+                    this.showError(`Could not fetch preview: ${error.message}. Try a different URL or check your connection.`);
+                    this.hideLoading();
+                }
+            }
+            
+            extractMetadata(html, url) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const urlObj = new URL(url);
+                
+                // Extract Open Graph metadata first, fall back to regular meta tags
+                const getMeta = (name) => {
+                    return doc.querySelector(`meta[property="og:${name}"]`)?.getAttribute('content') ||
+                           doc.querySelector(`meta[name="${name}"]`)?.getAttribute('content') ||
+                           doc.querySelector(`meta[name="twitter:${name}"]`)?.getAttribute('content');
+                };
+                
+                // Extract title
+                const title = getMeta('title') || 
+                             doc.querySelector('title')?.textContent ||
+                             doc.querySelector('h1')?.textContent ||
+                             urlObj.hostname;
+                
+                // Extract description
+                const description = getMeta('description') ||
+                                  doc.querySelector('meta[name="description"]')?.getAttribute('content') ||
+                                  doc.querySelector('p')?.textContent?.substring(0, this.MAX_DESCRIPTION_LENGTH) + '...' ||
+                                  `Website: ${urlObj.hostname}`;
+                
+                // Extract image
+                let image = getMeta('image') ||
+                           doc.querySelector('meta[property="og:image"]')?.getAttribute('content');
+                
+                // Make relative image URLs absolute
+                if (image && !image.startsWith('http')) {
+                    image = new URL(image, url).href;
+                }
+                
+                // Try to find first large image if no meta image
+                if (!image) {
+                    const images = Array.from(doc.querySelectorAll('img'))
+                        .filter(img => {
+                            const width = parseInt(img.getAttribute('width')) || 0;
+                            const height = parseInt(img.getAttribute('height')) || 0;
+                            return width >= 200 && height >= 200;
+                        });
+                    
+                    if (images.length > 0) {
+                        const firstImage = images[0].getAttribute('src');
+                        image = firstImage.startsWith('http') ? firstImage : new URL(firstImage, url).href;
+                    }
+                }
+                
+                // Get favicon
+                let favicon = doc.querySelector('link[rel="icon"]')?.getAttribute('href') ||
+                             doc.querySelector('link[rel="shortcut icon"]')?.getAttribute('href');
+                
+                if (favicon && !favicon.startsWith('http')) {
+                    favicon = new URL(favicon, url).href;
+                }
+                
+                // Fallback favicon
+                if (!favicon) {
+                    favicon = `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=32`;
+                }
+                
+                return {
+                    url: url,
+                    title: this.cleanText(title),
+                    description: this.cleanText(description).substring(0, this.MAX_DESCRIPTION_LENGTH) + 
+                                (description.length > this.MAX_DESCRIPTION_LENGTH ? '...' : ''),
+                    image: image,
+                    favicon: favicon,
+                    siteName: urlObj.hostname.replace('www.', ''),
+                    timestamp: new Date().toISOString()
+                };
+            }
+            
+            cleanText(text) {
+                if (!text) return '';
+                return text.replace(/\s+/g, ' ').trim();
+            }
+            
+            displayPreview(data) {
+                // Hide loading, show preview
+                this.hideLoading();
+                this.previewContainer.classList.add('show');
+                this.previewCard.style.display = 'block';
+                
+                // Set title
+                this.previewTitle.textContent = data.title || data.siteName;
+                
+                // Set description
+                this.previewDescription.textContent = data.description || 
+                    `Visit ${data.siteName} to explore more content.`;
+                
+                // Set URL
+                this.previewUrl.href = data.url;
+                this.previewUrl.textContent = data.url;
+                this.visitLink.href = data.url;
+                
+                // Set favicon
+                if (data.favicon) {
+                    this.favicon.src = data.favicon;
+                    this.favicon.style.display = 'block';
+                }
+                
+                // Set image
+                if (data.image) {
+                    this.previewImage.src = data.image;
+                    this.previewImage.onload = () => {
+                        this.previewImage.classList.add('show');
+                        this.defaultImage.style.display = 'none';
+                    };
+                    this.previewImage.onerror = () => {
+                        this.previewImage.classList.remove('show');
+                        this.defaultImage.style.display = 'flex';
+                        this.defaultImage.textContent = '🌐';
+                    };
+                } else {
+                    this.previewImage.classList.remove('show');
+                    this.defaultImage.style.display = 'flex';
+                    this.defaultImage.textContent = '🌐';
+                }
+            }
+            
+            showLoading() {
+                this.previewBtn.disabled = true;
+                this.loadingElement.style.display = 'block';
+                this.previewCard.style.display = 'none';
+                this.previewContainer.classList.add('show');
+            }
+            
+            hideLoading() {
+                this.previewBtn.disabled = false;
+                this.loadingElement.style.display = 'none';
+            }
+            
+            showError(message) {
+                this.errorText.textContent = message;
+                this.errorMessage.classList.add('show');
+                this.previewContainer.classList.remove('show');
+                setTimeout(() => {
+                    this.errorMessage.classList.remove('show');
+                }, 5000);
+            }
+            
+            hideError() {
+                this.errorMessage.classList.remove('show');
+            }
+            
+            saveToHistory(url, data) {
+                let history = JSON.parse(localStorage.getItem(this.RECENT_STORAGE_KEY) || '[]');
+                
+                // Remove if already exists
+                history = history.filter(item => item.url !== url);
+                
+                // Add to beginning
+                history.unshift({
+                    url: url,
+                    title: data.title,
+                    siteName: data.siteName,
+                    timestamp: data.timestamp
+                });
+                
+                // Keep only last 10 items
+                history = history.slice(0, 10);
+                
+                localStorage.setItem(this.RECENT_STORAGE_KEY, JSON.stringify(history));
+                this.loadRecentLinks();
+            }
+            
+            loadRecentLinks() {
+                const history = JSON.parse(localStorage.getItem(this.RECENT_STORAGE_KEY) || '[]');
+                
+                if (history.length > 0) {
+                    this.recentLinks.classList.add('show');
+                    this.recentList.innerHTML = '';
+                    
+                    history.forEach((item, index) => {
+                        const recentItem = document.createElement('div');
+                        recentItem.className = 'recent-item';
+                        recentItem.innerHTML = `
+                            <div class="recent-icon">${index + 1}</div>
+                            <div class="recent-url">${item.title || item.siteName}</div>
+                        `;
+                        
+                        recentItem.addEventListener('click', () => {
+                            this.linkInput.value = item.url;
+                            this.fetchPreview(item.url);
+                        });
+                        
+                        this.recentList.appendChild(recentItem);
+                    });
+                } else {
+                    this.recentLinks.classList.remove('show');
+                }
+            }
+            
+            clearAll() {
+                this.linkInput.value = '';
+                this.previewContainer.classList.remove('show');
+                this.previewCard.style.display = 'none';
+                this.hideError();
+                this.linkInput.focus();
+            }
+        }
+        
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new RealLinkPreview();
+        });
+    </script>
+</body>
+</html>

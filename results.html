@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Game Results - Winners Leaderboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ffaa00, #ff3333);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .tab-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(45deg, #ffaa00, #ff3333);
+            border-color: transparent;
+            box-shadow: 0 5px 20px rgba(255,51,51,0.3);
+        }
+        
+        .leaderboard {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .leaderboard-header {
+            display: grid;
+            grid-template-columns: 80px 1fr 120px 120px;
+            padding: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            font-weight: bold;
+            color: #ffaa00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .leaderboard-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 120px 120px;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .leaderboard-row:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        
+        .rank {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .rank-1 { color: gold; }
+        .rank-2 { color: silver; }
+        .rank-3 { color: #cd7f32; }
+        
+        .player-name {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .player-name .crown {
+            color: gold;
+            font-size: 1.2em;
+        }
+        
+        .wins {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        
+        .deaths {
+            color: #ff3333;
+        }
+        
+        .stat-value {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stat-card h3 {
+            color: #aaa;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffaa00, #ff3333);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #aaa;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            border: 2px solid #ffaa00;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .refresh-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 40px;
+            background: linear-gradient(45deg, #ffaa00, #ff3333);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255,51,51,0.3);
+        }
+        
+        .back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .leaderboard-header, .leaderboard-row {
+                grid-template-columns: 50px 1fr 80px 80px;
+                font-size: 0.9em;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .tab-btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏆 BATTLE ROYALE RESULTS 🏆</h1>
+            <div class="subtitle">Who will be the next champion?</div>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('alltime')">All-Time Winners</button>
+            <button class="tab-btn" onclick="switchTab('daily')">Daily Winners</button>
+        </div>
+        
+        <div id="alltimeSection" class="leaderboard">
+            <div class="leaderboard-header">
+                <div>Rank</div>
+                <div>Player</div>
+                <div>Wins</div>
+                <div>K/D Ratio</div>
+            </div>
+            <div id="alltimeList" class="leaderboard-list">
+                <div class="loading">Loading all-time winners...</div>
+            </div>
+        </div>
+        
+        <div id="dailySection" class="leaderboard" style="display: none;">
+            <div class="leaderboard-header">
+                <div>Rank</div>
+                <div>Player</div>
+                <div>Wins Today</div>
+                <div>Deaths Today</div>
+            </div>
+            <div id="dailyList" class="leaderboard-list">
+                <div class="loading">Loading daily winners...</div>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Players</h3>
+                <div class="number" id="totalPlayers">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Kills</h3>
+                <div class="number" id="totalKills">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Today</h3>
+                <div class="number" id="activeToday">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Win Rate</h3>
+                <div class="number" id="winRate">0%</div>
+            </div>
+        </div>
+        
+        <button class="refresh-btn" onclick="loadData()">🔄 Refresh Leaderboard</button>
+    </div>
+    
+    <a href="game.html" class="back-btn">⬅️ Back to Game</a>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            doc,
+            getDocs,
+            query,
+            orderBy,
+            limit,
+            where,
+            Timestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9jF-ocy6HjsVzWVVlAyXW-4aIFgA79-A",
+            authDomain: "crypto-6517d.firebaseapp.com",
+            projectId: "crypto-6517d",
+            storageBucket: "crypto-6517d.firebasestorage.app",
+            messagingSenderId: "60263975159",
+            appId: "1:60263975159:web:bd53dcaad86d6ed9592bf2"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        let currentTab = 'alltime';
+        
+        window.switchTab = function(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'alltime') {
+                document.getElementById('alltimeSection').style.display = 'block';
+                document.getElementById('dailySection').style.display = 'none';
+                loadAllTimeWinners();
+            } else {
+                document.getElementById('alltimeSection').style.display = 'none';
+                document.getElementById('dailySection').style.display = 'block';
+                loadDailyWinners();
+            }
+        };
+        
+        async function loadAllTimeWinners() {
+            const listElement = document.getElementById('alltimeList');
+            listElement.innerHTML = '<div class="loading">Loading all-time winners...</div>';
+            
+            try {
+                // Get all-time wins
+                const winsRef = collection(db, 'game_alltime_wins');
+                const winsQuery = query(winsRef, orderBy('wins', 'desc'), limit(50));
+                const winsSnapshot = await getDocs(winsQuery);
+                
+                // Get all-time deaths for K/D ratio
+                const deathsRef = collection(db, 'game_alltime_deaths');
+                const deathsSnapshot = await getDocs(deathsRef);
+                
+                const deathsMap = new Map();
+                deathsSnapshot.forEach(doc => {
+                    deathsMap.set(doc.id, doc.data().deaths || 0);
+                });
+                
+                if (winsSnapshot.empty) {
+                    listElement.innerHTML = '<div style="text-align: center; padding: 30px; color: #aaa;">No winners yet. Be the first!</div>';
+                    return;
+                }
+                
+                let html = '';
+                let rank = 1;
+                
+                winsSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    const playerId = doc.id;
+                    const playerName = data.playerName || 'Anonymous';
+                    const wins = data.wins || 0;
+                    const deaths = deathsMap.get(playerId) || 1; // Avoid division by zero
+                    const kdRatio = (wins / deaths).toFixed(2);
+                    
+                    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+                    
+                    html += `
+                        <div class="leaderboard-row">
+                            <div class="rank ${rankClass}">#${rank}</div>
+                            <div class="player-name">
+                                ${rank === 1 ? '<span class="crown">👑</span>' : ''}
+                                ${playerName}
+                            </div>
+                            <div class="wins stat-value">${wins}</div>
+                            <div class="stat-value">${kdRatio}</div>
+                        </div>
+                    `;
+                    
+                    rank++;
+                });
+                
+                listElement.innerHTML = html;
+                
+                // Update total players count
+                document.getElementById('totalPlayers').textContent = winsSnapshot.size;
+                
+                // Calculate total kills (wins)
+                let totalKills = 0;
+                winsSnapshot.forEach(doc => totalKills += doc.data().wins || 0);
+                document.getElementById('totalKills').textContent = totalKills;
+                
+                // Calculate average win rate
+                const avgWinRate = winsSnapshot.size > 0 ? Math.round((totalKills / winsSnapshot.size) * 10) / 10 : 0;
+                document.getElementById('winRate').textContent = avgWinRate + '%';
+                
+            } catch (error) {
+                console.error('Error loading all-time winners:', error);
+                listElement.innerHTML = '<div style="text-align: center; padding: 30px; color: #ff3333;">Error loading data. Please refresh.</div>';
+            }
+        }
+        
+        async function loadDailyWinners() {
+            const listElement = document.getElementById('dailyList');
+            listElement.innerHTML = '<div class="loading">Loading daily winners...</div>';
+            
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                
+                // Get daily wins
+                const winsRef = collection(db, 'game_daily_wins', today, 'players');
+                const winsQuery = query(winsRef, orderBy('wins', 'desc'), limit(50));
+                const winsSnapshot = await getDocs(winsQuery);
+                
+                // Get daily deaths
+                const deathsRef = collection(db, 'game_daily_deaths', today, 'players');
+                const deathsSnapshot = await getDocs(deathsRef);
+                
+                const deathsMap = new Map();
+                deathsSnapshot.forEach(doc => {
+                    deathsMap.set(doc.id, doc.data().deaths || 0);
+                });
+                
+                if (winsSnapshot.empty) {
+                    listElement.innerHTML = '<div style="text-align: center; padding: 30px; color: #aaa;">No winners today. Play now!</div>';
+                    return;
+                }
+                
+                let html = '';
+                let rank = 1;
+                let activeToday = 0;
+                
+                winsSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    const playerName = data.playerName || 'Anonymous';
+                    const wins = data.wins || 0;
+                    const deaths = deathsMap.get(doc.id) || 0;
+                    
+                    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+                    
+                    html += `
+                        <div class="leaderboard-row">
+                            <div class="rank ${rankClass}">#${rank}</div>
+                            <div class="player-name">
+                                ${rank === 1 ? '<span class="crown">👑</span>' : ''}
+                                ${playerName}
+                            </div>
+                            <div class="wins stat-value">${wins}</div>
+                            <div class="deaths stat-value">${deaths}</div>
+                        </div>
+                    `;
+                    
+                    rank++;
+                    activeToday++;
+                });
+                
+                listElement.innerHTML = html;
+                
+                // Update active today count
+                document.getElementById('activeToday').textContent = activeToday;
+                
+            } catch (error) {
+                console.error('Error loading daily winners:', error);
+                listElement.innerHTML = '<div style="text-align: center; padding: 30px; color: #ff3333;">Error loading data. Please refresh.</div>';
+            }
+        }
+        
+        window.loadData = function() {
+            if (currentTab === 'alltime') {
+                loadAllTimeWinners();
+            } else {
+                loadDailyWinners();
+            }
+        };
+        
+        // Initial load
+        loadAllTimeWinners();
+        
+        // Refresh every 30 seconds
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>

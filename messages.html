@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - BondBase</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            /* Consistent with mingle.html */
+            --primary: #b3004b; /* deep crimson */
+            --primary-dark: #7a0034;
+            --primary-light: #e63986;
+            --secondary: #8b0000; /* dark red for alerts/badges */
+            --accent: #444;
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --text-light: #9ca3af;
+            --bg-primary: #0b0b0b;
+            --bg-secondary: #141414;
+            --bg-card: #1a1a1a;
+            --border: #2e2e2e;
+            --border-color: #2e2e2e;
+            --bg-light: #1b1b1b;
+            --accent-color: #b3004b;
+            --accent-dark: #7a0034;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -1px rgba(0, 0, 0, 0.7);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.8), 0 4px 6px -2px rgba(0, 0, 0, 0.7);
+            --radius: 12px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            cursor: default;
+            padding-top: 60px; /* Space for top nav */
+        }
+
+        /* Icon Styling */
+        .feather {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        /* Top Navigation Bar - Back button only */
+        .top-nav {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(6px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0.75rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .top-nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+/* MODERN MESSAGES LIST STYLING - TikTok/WhatsApp Style */
+
+/* Remove all padding from the messages list container */
+.messages-list-container {
+    padding: 0 !important;
+}
+
+/* Remove padding from messages list itself */
+#messagesList {
+    padding: 0 !important;
+}
+
+/* TikTok/WhatsApp style message cards - edge to edge */
+.message-card {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px !important; /* Only left/right padding */
+    margin: 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+    border-radius: 0 !important;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Remove the last border from the last message card */
+.message-card:last-child {
+    border-bottom: none !important;
+}
+
+/* Add a subtle hover effect that covers full width */
+.message-card:hover {
+    background-color: rgba(179, 0, 75, 0.05) !important;
+}
+
+/* Avatar styling */
+.message-card img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.message-content {
+    flex: 1;
+    overflow: hidden;
+    min-width: 0; /* Allow text truncation */
+}
+
+.message-content h3 {
+    margin: 0 0 4px 0;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.message-time {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    white-space: nowrap;
+    margin-left: 8px;
+}
+
+.message-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.unread-count {
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    margin-left: 8px;
+}
+
+.no-messages {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+}
+
+        /* Back button */
+        .back-button {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+        }
+
+        .back-button:hover {
+            color: var(--primary-light);
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary-light);
+            transform: translateX(-2px);
+        }
+
+        .back-button .feather {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            stroke: currentColor;
+        }
+
+        .back-button span {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        /* Hide the original navbar */
+        .navbar {
+            display: none;
+        }
+
+        /* Messages container */
+        .messages-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+
+        .messages-header {
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        .messages-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* Search container */
+        .search-container {
+            position: relative;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 45px 12px 16px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(182, 0, 75, 0.2);
+        }
+
+        .search-container input::placeholder {
+            color: var(--text-light);
+        }
+
+        .search-container i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        /* Messages list */
+        .messages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        /* Message card styling - consistent with mingle.html aesthetic */
+        .message-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .message-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .message-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border);
+        }
+
+        .message-content {
+            flex: 1;
+            min-width: 0; /* For text overflow */
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .message-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .message-preview {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .message-unread {
+            background-color: rgba(182, 0, 75, 0.1);
+            border-color: rgba(182, 0, 75, 0.3);
+        }
+
+        .message-unread .message-name {
+            font-weight: 700;
+        }
+
+        .message-unread .message-preview {
+            color: var(--primary-light);
+            font-weight: 500;
+        }
+
+        .unread-badge {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+
+        /* No messages state */
+        .no-messages {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 20px;
+        }
+
+        .no-messages .feather {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 20px;
+            color: var(--primary-light);
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        /* Loading state */
+        .message-card.loading {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 15px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .loading-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, var(--bg-light) 25%, var(--border) 50%, var(--bg-light) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        .loading-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .loading-line {
+            height: 12px;
+            background: linear-gradient(90deg, var(--bg-light) 25%, var(--border) 50%, var(--bg-light) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        .loading-line.short {
+            width: 60%;
+        }
+
+        .loading-line.medium {
+            width: 80%;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .messages-container {
+                padding: 15px 10px;
+            }
+            
+            .messages-title {
+                font-size: 1.5rem;
+            }
+            
+            .message-card {
+                padding: 12px;
+            }
+            
+            .message-avatar {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .back-button {
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .back-button span {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .messages-container {
+                padding: 10px 8px;
+            }
+            
+            .message-card {
+                padding: 10px;
+                gap: 12px;
+            }
+            
+            .message-avatar {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .message-name {
+                font-size: 0.95rem;
+            }
+            
+            .message-preview {
+                font-size: 0.85rem;
+            }
+            
+            .back-button .feather {
+                width: 18px;
+                height: 18px;
+                margin-right: 6px;
+            }
+            
+            .back-button span {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation with Back Button Only -->
+    <nav class="top-nav">
+        <div class="top-nav-container">
+            <a href="mingle.html" class="back-button">
+                <svg class="feather" data-feather="arrow-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span>Back to Connect</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="messages-container">
+        <div class="messages-header">
+            <h1 class="messages-title">Messages</h1>
+            
+            <div class="search-container">
+                <input type="text" placeholder="Search messages..." id="messageSearch">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        
+        <div class="messages-list" id="messagesList">
+            <!-- Loading state -->
+            <div class="message-card loading">
+                <div class="loading-avatar"></div>
+                <div class="loading-content">
+                    <div class="loading-line" style="width: 70%"></div>
+                    <div class="loading-line medium"></div>
+                </div>
+            </div>
+            <div class="message-card loading">
+                <div class="loading-avatar"></div>
+                <div class="loading-content">
+                    <div class="loading-line" style="width: 70%"></div>
+                    <div class="loading-line medium"></div>
+                </div>
+            </div>
+            <div class="message-card loading">
+                <div class="loading-avatar"></div>
+                <div class="loading-content">
+                    <div class="loading-line" style="width: 70%"></div>
+                    <div class="loading-line medium"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="call.js"></script>
+    <script type="module" src="app.js"></script>
+    <script src="messages.js"></script>
+    
+    <!-- Initialize Feather Icons -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Feather Icons
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            } else {
+                console.log('Feather icons not loaded');
+                // Fallback: Manually set stroke color for the back arrow
+                const backIcon = document.querySelector('.back-button .feather');
+                if (backIcon) {
+                    backIcon.style.stroke = 'currentColor';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
