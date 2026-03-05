@@ -17,12 +17,13 @@ class InvisiblePagination {
         // Firebase configuration (same as your app.js)
         this.firebaseConfig = {
            
-    apiKey: "AIzaSyC8_PEsfTOr-gJ8P1MoXobOAfqwTVqEZWo",
-    authDomain: "usa-dating-23bc3.firebaseapp.com",
-    projectId: "usa-dating-23bc3",
-    storageBucket: "usa-dating-23bc3.firebasestorage.app",
-    messagingSenderId: "423286263327",
-    appId: "1:423286263327:web:17f0caf843dc349c144f2a"
+        const firebaseConfig = {
+    apiKey: "AIzaSyCwSv_Xb2ZzD_M_dKmGz9aI7WSXyxanza8",
+    authDomain: "fir-auth-be493.firebaseapp.com",
+    projectId: "fir-auth-be493",
+    storageBucket: "fir-auth-be493.firebasestorage.app",
+    messagingSenderId: "1074457503152",
+    appId: "1:1074457503152:web:c4220c1ba1c7ad607be275"
   };
         this.app = initializeApp(this.firebaseConfig, `pagination-${Date.now()}`);
         this.db = getFirestore(this.app);
