@@ -27,14 +27,14 @@ class ChatCustomization {
         this.app = null;
         
         // Firebase Configuration (same as group-chat.js)
-        this.firebaseConfig = {
-            apiKey: "AIzaSyC9jF-ocy6HjsVzWVVlAyXW-4aIFgA79-A",
-            authDomain: "crypto-6517d.firebaseapp.com",
-            projectId: "crypto-6517d",
-            storageBucket: "crypto-6517d.firebasestorage.app",
-            messagingSenderId: "60263975159",
-            appId: "1:60263975159:web:bd53dcaad86d6ed9592bf2"
-        };
+        const firebaseConfig = {
+    apiKey: "AIzaSyCwSv_Xb2ZzD_M_dKmGz9aI7WSXyxanza8",
+    authDomain: "fir-auth-be493.firebaseapp.com",
+    projectId: "fir-auth-be493",
+    storageBucket: "fir-auth-be493.firebasestorage.app",
+    messagingSenderId: "1074457503152",
+    appId: "1:1074457503152:web:c4220c1ba1c7ad607be275"
+  };
         
         // Color options (15 visually appealing colors)
         this.colorOptions = [
