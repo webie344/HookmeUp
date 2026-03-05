@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account - BondBase</title>
+    <title>My Account - HookmeUp</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1431,25 +1431,6 @@
             display: block;
         }
 
-        /* Remove all gaming-specific styles */
-        .gamer-profile-form-container,
-        .profile-preview-container,
-        .gamer-stats-grid,
-        .stat-card,
-        .gamer-badge,
-        .gamer-screenshot,
-        .generate-profile-btn,
-        .screenshot-upload,
-        .screenshot-preview,
-        .gamer-profile-link,
-        .link-preview,
-        .stats-section,
-        .preferences-section,
-        .achievements-section,
-        .xp-system-card {
-            display: none;
-        }
-
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .account-content {
@@ -1573,7 +1554,7 @@
 <body>
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="index.html" class="logo">BondBase</a>
+            <a href="index.html" class="logo">HookmeUp</a>
             <div class="nav-toggle" id="mobile-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -1725,7 +1706,7 @@
                             <polyline points="16 6 12 2 8 6"></polyline>
                             <line x1="12" y1="2" x2="12" y2="15"></line>
                         </svg>
-                        Share BondBase
+                        Share HookmeUp
                     </button>
                     <button class="menu-item" data-section="settings">
                         <svg class="feather" data-feather="settings">
@@ -2129,7 +2110,7 @@
                     </div>
                 </div>
 
-                <!-- Share BondBase Section - Made more compact -->
+                <!-- Share HookmeUp Section - Made more compact -->
                 <div class="account-section" id="shareSection" style="display: none;">
                     <h2>
                         <svg class="feather" data-feather="share">
@@ -2137,16 +2118,16 @@
                             <polyline points="16 6 12 2 8 6"></polyline>
                             <line x1="12" y1="2" x2="12" y2="15"></line>
                         </svg>
-                        Share BondBase
+                        Share HookmeUp
                     </h2>
-                    <p class="section-description">Invite friends to join BondBase. Help grow our community!</p>
+                    <p class="section-description">Invite friends to join HookmeUp. Help grow our community!</p>
                     
                     <div class="share-container">
                         <div class="share-link-section">
                             <h3>Share with Friends</h3>
                             <div class="link-input-group">
-                                <input type="text" id="bondlyLink" class="share-input" value="https://BondBase.com" readonly>
-                                <button id="copyBondlyLinkBtn" class="btn-primary">
+                                <input type="text" id="hookmeupLink" class="share-input" value="https://HookmeUp.com" readonly>
+                                <button id="copyHookmeUpLinkBtn" class="btn-primary">
                                     <svg class="feather" data-feather="copy">
                                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -2154,7 +2135,7 @@
                                     Copy Link
                                 </button>
                             </div>
-                            <div class="copy-feedback" id="copyBondlyFeedback"></div>
+                            <div class="copy-feedback" id="copyHookmeUpFeedback"></div>
                         </div>
                     </div>
                 </div>
@@ -2344,16 +2325,16 @@
             }
         });
 
-        // Copy BondBase link functionality
-        document.getElementById('copyBondlyLinkBtn').addEventListener('click', function() {
-            const bondlyLink = document.getElementById('bondlyLink');
-            const feedback = document.getElementById('copyBondlyFeedback');
+        // Copy HookmeUp link functionality
+        document.getElementById('copyHookmeUpLinkBtn').addEventListener('click', function() {
+            const hookmeupLink = document.getElementById('hookmeupLink');
+            const feedback = document.getElementById('copyHookmeUpFeedback');
             
-            bondlyLink.select();
-            bondlyLink.setSelectionRange(0, 99999);
+            hookmeupLink.select();
+            hookmeupLink.setSelectionRange(0, 99999);
             
             try {
-                navigator.clipboard.writeText(bondlyLink.value).then(() => {
+                navigator.clipboard.writeText(hookmeupLink.value).then(() => {
                     feedback.textContent = 'Link copied to clipboard!';
                     feedback.className = 'copy-feedback success';
                     feedback.style.display = 'block';
@@ -2798,21 +2779,17 @@
                 modal.style.display = 'none';
             }
         });
-
-        // Remove all gaming-related code
-        // Gamer Profile section has been completely removed
     </script>
 
     <!-- Your existing script imports -->
     <script type="module" src="app.js"></script>
     <script type="module" src="call.js"></script>
-    <script type="module" src="notification.js"></script>
+ <script type="module" src="notification.js"></script>
     <script type="module" src="chat.js"></script>
     <script type="module" src="pagination.js"></script>
     <script type="module" src="creative.js"></script>
     <script type="module" src="form.js"></script>
     <script src="location.js"></script>
     <script type="module" src="social.js"></script>
-    <!-- Removed games.js import -->
 </body>
 </html>
