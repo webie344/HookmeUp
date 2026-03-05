@@ -1,468 +1,142 @@
-
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Add this to your EXISTING index.html file -->
-<meta property="og:title" content="Bond Base - A New Way to Connect Online">
-<meta property="og:description" content="Meet, Chat & Build Your Space.">
-<meta property="og:image" content="https://bond-base.vercel.app/Bondbases.png">
-<meta property="og:url" content="https://bond-base.vercel.app">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BondBase - Anonymous Social Gaming</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Add Firebase SDKs -->
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged,
-            signInAnonymously
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        
-        // Your Firebase configuration
-        const firebaseConfig = {
-    apiKey: "AIzaSyC9jF-ocy6HjsVzWVVlAyXW-4aIFgA79-A",
-    authDomain: "crypto-6517d.firebaseapp.com",
-    projectId: "crypto-6517d",
-    storageBucket: "crypto-6517d.firebasestorage.app",
-    messagingSenderId: "60263975159",
-    appId: "1:60263975159:web:bd53dcaad86d6ed9592bf2"
-  };
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HookMeUp</title>
 
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        
-        // Make auth available globally
-        window.auth = auth;
-        window.signInAnonymously = signInAnonymously;
-        window.onAuthStateChanged = onAuthStateChanged;
-    </script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
 
-        body {
-            background-color: #0f0a0a;
-            color: #f0e6e6;
-            height: 100vh;
-            overflow: hidden;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
 
-        .background-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
+body{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+overflow:hidden;
+background:linear-gradient(120deg,#020617,#0f172a,#020617);
+background-size:400% 400%;
+animation:bgMove 12s ease infinite;
+}
 
-        .floating-icons {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
+/* moving gradient background */
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
 
-        .icon {
-            position: absolute;
-            font-size: 28px;
-            opacity: 0.4;
-            animation: float 20s infinite linear;
-            text-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
+.container{
+text-align:center;
+padding:20px;
+width:100%;
+max-width:420px;
+}
 
-        .icon:hover {
-            opacity: 1;
-            color: #FF3366;
-            transform: scale(1.3);
-            text-shadow: 0 0 20px rgba(255, 51, 102, 0.8);
-        }
+/* logo */
+.logo{
+width:120px;
+margin:auto;
+margin-bottom:20px;
+animation:float 4s ease-in-out infinite;
+}
 
-        .content {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 40px 20px;
-        }
+@keyframes float{
+0%{transform:translateY(0px);}
+50%{transform:translateY(-10px);}
+100%{transform:translateY(0px);}
+}
 
-        .app-info {
-            text-align: center;
-            max-width: 600px;
-            margin-top: 20vh;
-        }
+h1{
+font-size:40px;
+font-weight:bold;
+margin-bottom:10px;
+}
 
-        .app-name {
-            font-size: 64px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            letter-spacing: 3px;
-            background: linear-gradient(to right, #8B0000, #B22222, #DC143C);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 20px rgba(139, 0, 0, 0.3);
-        }
+h1 span{
+color:#ff3c7f;
+}
 
-        .app-tagline {
-            font-size: 22px;
-            color: #d8a7a7;
-            line-height: 1.4;
-            margin-bottom: 30px;
-        }
+.tagline{
+font-size:26px;
+font-weight:600;
+margin-bottom:10px;
+}
 
-        .button-container {
-            width: 100%;
-            padding: 20px;
-        }
+.tagline span{
+color:#ff3c7f;
+}
 
-        .get-started-btn {
-            color: white;
-            border: none;
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-            font-size: 22px;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 25px rgba(139, 0, 0, 0.4);
-            display: block;
-            margin: 0 auto;
-            letter-spacing: 1.5px;
-            
-            /* Animated gradient background */
-            background: linear-gradient(
-                90deg,
-                #8B0000,
-                #A52A2A,
-                #B22222,
-                #8B0000
-            );
-            background-size: 300% 300%;
-            animation: gradientShift 3s ease-in-out infinite;
-        }
+.sub{
+font-size:15px;
+opacity:0.8;
+margin-bottom:40px;
+}
 
-        .get-started-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(139, 0, 0, 0.6);
-            animation-play-state: paused;
-        }
+/* button */
+.btn{
+display:block;
+width:100%;
+padding:16px;
+border-radius:40px;
+border:none;
+font-size:18px;
+font-weight:bold;
+color:white;
+cursor:pointer;
+background:linear-gradient(45deg,#ff4d6d,#ff2e9f);
+box-shadow:0 0 20px rgba(255,60,120,0.6);
+transition:0.3s;
+animation:pulse 2.5s infinite;
+}
 
-        .get-started-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-            animation-play-state: paused;
-        }
+.btn:hover{
+transform:scale(1.05);
+}
 
-        /* Keyframe animations */
-        @keyframes float {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            25% {
-                transform: translate(calc(100vw * 0.05), calc(100vh * 0.05)) rotate(90deg);
-            }
-            50% {
-                transform: translate(calc(100vw * -0.03), calc(100vh * 0.08)) rotate(180deg);
-            }
-            75% {
-                transform: translate(calc(100vw * 0.08), calc(100vh * -0.02)) rotate(270deg);
-            }
-            100% {
-                transform: translate(0, 0) rotate(360deg);
-            }
-        }
+@keyframes pulse{
+0%{box-shadow:0 0 10px rgba(255,60,120,0.4);}
+50%{box-shadow:0 0 25px rgba(255,60,120,0.9);}
+100%{box-shadow:0 0 10px rgba(255,60,120,0.4);}
+}
 
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* Pulse animation for extra effect */
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 5px 25px rgba(139, 0, 0, 0.4);
-            }
-            50% {
-                box-shadow: 0 5px 30px rgba(220, 20, 60, 0.6);
-            }
-            100% {
-                box-shadow: 0 5px 25px rgba(139, 0, 0, 0.4);
-            }
-        }
-
-        .get-started-btn {
-            animation: gradientShift 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
-        }
-
-        /* Glow effect for icons */
-        @keyframes glow {
-            0%, 100% {
-                filter: drop-shadow(0 0 5px rgba(220, 20, 60, 0.6));
-            }
-            50% {
-                filter: drop-shadow(0 0 15px rgba(255, 51, 102, 0.8));
-            }
-        }
-
-        .icon {
-            animation: float 20s infinite linear, glow 3s infinite ease-in-out;
-        }
-
-        /* Loading spinner */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .app-name {
-                font-size: 48px;
-            }
-            
-            .app-tagline {
-                font-size: 20px;
-            }
-            
-            .get-started-btn {
-                font-size: 20px;
-                padding: 18px;
-            }
-            
-            .icon {
-                font-size: 24px;
-                opacity: 0.5;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .app-name {
-                font-size: 36px;
-            }
-            
-            .app-tagline {
-                font-size: 18px;
-            }
-            
-            .get-started-btn {
-                font-size: 18px;
-                padding: 16px;
-            }
-            
-            .icon {
-                font-size: 22px;
-                opacity: 0.6;
-            }
-        }
-    </style>
+</style>
 </head>
+
 <body>
-    <div class="background-container">
-        <div class="floating-icons" id="floatingIcons"></div>
-    </div>
 
-    <div class="content">
-        <div class="app-info">
-            <h1 class="app-name">BondBase</h1>
-            <p class="app-tagline">Meet people around the world, express yourself, and build your own digital space — from conversations to online stores.
-Your community starts here.
-Get Started.</p>
-        </div>
+<div class="container">
 
-        <div class="button-container">
-            <button class="get-started-btn" id="getStartedBtn">
-                <span id="buttonText">GET STARTED</span>
-            </button>
-        </div>
-    </div>
+<img src="logo.png" class="logo">
 
-    <script>
-        // Icon options for the floating background
-        const iconClasses = [
-            'fas fa-dice', 'fas fa-gamepad', 'fas fa-headset', 'fas fa-mask',
-            'fas fa-user-secret', 'fas fa-ghost', 'fas fa-vr-cardboard', 'fas fa-key',
-            'fas fa-lock', 'fas fa-shield-alt', 'fas fa-comment-alt', 'fas fa-users',
-            'fas fa-wine-glass-alt', 'fas fa-gem', 'fas fa-fire', 'fas fa-heart',
-            'fas fa-crown', 'fas fa-trophy', 'fas fa-bolt', 'fas fa-star'
-        ];
+<h1>hook<span>meup</span></h1>
 
-        // Create floating icons with increased visibility
-        function createFloatingIcons() {
-            const container = document.getElementById('floatingIcons');
-            const iconCount = 50; // Increased number of icons
-            
-            for (let i = 0; i < iconCount; i++) {
-                const icon = document.createElement('div');
-                icon.className = 'icon';
-                
-                // Random icon
-                const randomIcon = iconClasses[Math.floor(Math.random() * iconClasses.length)];
-                icon.innerHTML = `<i class="${randomIcon}"></i>`;
-                
-                // Random position
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                
-                // Random size - slightly larger
-                const size = Math.random() * 25 + 20;
-                
-                // Random animation
-                const duration = Math.random() * 30 + 20;
-                const delay = Math.random() * 5;
-                
-                icon.style.left = `${posX}%`;
-                icon.style.top = `${posY}%`;
-                icon.style.fontSize = `${size}px`;
-                icon.style.animation = `float ${duration}s linear ${delay}s infinite, glow ${Math.random() * 4 + 3}s infinite ease-in-out`;
-                
-                // More vibrant wine red colors
-                const colors = [
-                    '#DC143C', // Crimson - more vibrant
-                    '#FF3366', // Bright pink-red
-                    '#B22222', // Fire brick
-                    '#FF0033', // Bright red
-                    '#FF6B6B', // Coral red
-                    '#8B0000'  // Dark red
-                ];
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                icon.style.color = randomColor;
-                
-                // Vary opacity for depth
-                const opacity = Math.random() * 0.3 + 0.5; // 0.5 to 0.8 opacity
-                icon.style.opacity = opacity;
-                
-                container.appendChild(icon);
-            }
-        }
+<div class="tagline">
+Hook Up, Meet and <span>Chat</span>
+</div>
 
-        // Handle button click - Automatic login
-        document.getElementById('getStartedBtn').addEventListener('click', async function() {
-            const button = this;
-            const buttonText = document.getElementById('buttonText');
-            
-            // Change button text and disable it
-            buttonText.innerHTML = '<span class="spinner"></span> LOGGING IN...';
-            button.disabled = true;
-            
-            try {
-                // Check if user is already logged in
-                if (window.auth && window.auth.currentUser) {
-                    // User is already logged in, redirect to mingle
-                    window.location.href = 'mingle.html';
-                    return;
-                }
-                
-                // Try to sign in anonymously
-                if (window.signInAnonymously && window.auth) {
-                    const userCredential = await signInAnonymously(window.auth);
-                    console.log('Anonymous user signed in:', userCredential.user.uid);
-                    
-                    // Redirect to mingle page
-                    window.location.href = 'mingle.html';
-                } else {
-                    // Fallback: redirect to login page if Firebase is not loaded
-                    window.location.href = 'login.html';
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                
-                // Reset button state
-                buttonText.textContent = 'GET STARTED';
-                button.disabled = false;
-                
-                // Show error and redirect to login page as fallback
-                alert('Automatic login failed. Redirecting to login page...');
-                window.location.href = 'login.html';
-            }
-        });
+<div class="sub">
+Find fun encounters near you quickly and easily
+</div>
 
-        // Check if user is already logged in on page load
-        document.addEventListener('DOMContentLoaded', async () => {
-            createFloatingIcons();
-            
-            // Check for existing auth state
-            if (window.onAuthStateChanged && window.auth) {
-                window.onAuthStateChanged(window.auth, (user) => {
-                    if (user) {
-                        // User is already logged in, update button text
-                        const buttonText = document.getElementById('buttonText');
-                        buttonText.textContent = 'GO TO APP';
-                        
-                        // Update button click handler for logged-in users
-                        const button = document.getElementById('getStartedBtn');
-                        button.addEventListener('click', () => {
-                            window.location.href = 'mingle.html';
-                        }, { once: true });
-                    }
-                });
-            }
-        });
+<button class="btn" id="startBtn">Get Started</button>
 
-        // Add subtle color variation to button
-        function animateButtonColors() {
-            const button = document.getElementById('getStartedBtn');
-            const wineColors = [
-                '#8B0000',  // Dark Red
-                '#A52A2A',  // Brown Red
-                '#B22222',  // Fire Brick
-                '#DC143C',  // Crimson
-                '#FF0033'   // Bright Red
-            ];
-            
-            let colorIndex = 0;
-            
-            // Change gradient colors every 5 seconds
-            setInterval(() => {
-                const nextIndex = (colorIndex + 1) % wineColors.length;
-                const nextNextIndex = (colorIndex + 2) % wineColors.length;
-                
-                button.style.background = `linear-gradient(
-                    90deg,
-                    ${wineColors[colorIndex]},
-                    ${wineColors[nextIndex]},
-                    ${wineColors[nextNextIndex]},
-                    ${wineColors[colorIndex]}
-                )`;
-                
-                colorIndex = (colorIndex + 1) % wineColors.length;
-            }, 5000);
-        }
+</div>
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            createFloatingIcons();
-            animateButtonColors();
-        });
-    </script>
+<script>
+
+document.getElementById("startBtn").onclick=function(){
+window.location.href="signup.html";
+};
+
+</script>
+
 </body>
 </html>
