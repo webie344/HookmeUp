@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Default Group Creator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #311b92 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .controls {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .controls h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            margin: 15px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .primary-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .danger-btn {
+            background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
+            color: white;
+        }
+        
+        .danger-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(244, 67, 54, 0.3);
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #2196F3 0%, #0D47A1 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .info-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .info-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-card li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .info-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .progress-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .progress-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .progress-bar-container {
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .log-container {
+            margin-top: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .log-entry {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-bottom: 1px solid #333;
+            color: #ccc;
+        }
+        
+        .log-entry.info {
+            color: #ccc;
+        }
+        
+        .log-entry.success {
+            color: #4CAF50;
+        }
+        
+        .log-entry.warning {
+            color: #FFC107;
+        }
+        
+        .log-entry.error {
+            color: #f44336;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #e9ecef;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Default Group Creator</h1>
+            <p>Create 100 default gaming groups with unique names and populate them with secret gamer users</p>
+        </div>
+        
+        <div class="content">
+            <div class="controls">
+                <h2>⚙️ Creation Controls</h2>
+                
+                <button id="runCreation" class="button primary-btn">
+                    🚀 Run Group Creation (100 Groups)
+                </button>
+                
+                <button id="cleanupData" class="button danger-btn">
+                    🗑️ Cleanup Test Data
+                </button>
+                
+                <div class="info-card">
+                    <h3>📋 What This Will Create:</h3>
+                    <ul>
+                        <li>100 unique gaming-themed groups</li>
+                        <li>300+ secret gamer users</li>
+                        <li>50-200 random users per group</li>
+                        <li>System join messages for all users</li>
+                        <li>Anonymous user accounts (30%)</li>
+                        <li>Fun gaming profile bios</li>
+                        <li>Unique group avatars</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card" style="background: linear-gradient(135deg, #9C27B0 0%, #6A1B9A 100%);">
+                    <h3>⚠️ Important Notes:</h3>
+                    <ul>
+                        <li>Process may take 5-10 minutes</li>
+                        <li>Uses existing users if available</li>
+                        <li>Creates test users if needed</li>
+                        <li>Groups will be marked as "default"</li>
+                        <li>Backup data before running</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="progress-container" id="progressContainer" style="display: none;">
+                <h2>📈 Creation Progress</h2>
+                
+                <div class="progress-text">
+                    <span>Groups Created:</span>
+                    <span id="progressCount">0/100</span>
+                </div>
+                
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="groupsCount">0</div>
+                        <div class="stat-label">Groups Created</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number" id="usersCount">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number">100</div>
+                        <div class="stat-label">Target Groups</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px; color: #333;">📝 Activity Log</h3>
+                <div class="log-container" id="progressLog">
+                    <!-- Log entries will appear here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Default Group Creator v1.0 | Uses Firebase Firestore | Run with caution</p>
+        </div>
+    </div>
+
+    <script type="module" src="default.js"></script>
+</body>
+</html>

@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - BondBase</title>
+    <!-- Add these in your head tag -->
+     
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="scrol-fix.css">
+    <link rel="stylesheet" href="chat.css">
+    
+    
+    <!-- Feather Icons (Modern Line Icons) -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Add this AFTER Feather Icons but BEFORE your stream.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    /* Icon Styling */
+    .feather {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        margin: 0;
+        padding: 0;
+    }
+    
+    .chat-container {
+        background-image: url('darkwallpaper.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    .game-icon-btn{
+        font-size: 3px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        color: var(--text-primary);
+    }
+    
+    .game-icon-btn:hover {
+        background: rgba(179, 0, 75, 0.2);
+        color: var(--primary-light);
+    }
+
+    .message.sending .message-time {
+        font-style: italic;
+        color: var(--text-light);
+    }
+    
+    .voice-message-play-btn {
+        z-index: 10;
+        pointer-events: auto;
+    }
+
+    .voice-note-indicator {
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 15px;
+        background-color: var(--bg-card);
+        border-radius: 25px;
+        margin: 10px 0;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+    }
+    
+    .voice-note-timer {
+        font-size: 14px;
+        color: var(--text-primary);
+        font-weight: bold;
+    }
+    
+    .voice-note-controls {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .voice-note-btn {
+        background: none;
+        border: none;
+        color: var(--primary);
+        font-size: 10px;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 50%;
+        transition: all 0.3s;
+    }
+    
+    .voice-note-btn:hover {
+        background-color: rgba(179, 0, 75, 0.1);
+    }
+
+    .voice-message-controls {
+        pointer-events: none;
+    }
+
+    .voice-message-controls > * {
+        pointer-events: auto;
+    }
+
+    /* Call Controls */
+    .call-controls {
+        display: flex;
+        gap: 10px;
+        margin-left: auto;
+    }
+
+    .call-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow);
+        color: var(--text-primary);
+    }
+
+    .call-btn:hover {
+        background: var(--primary);
+        transform: scale(1.1);
+        box-shadow: var(--shadow-lg);
+        color: white;
+    }
+
+    .call-btn .feather {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+    }
+
+    #voiceCallBtn {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+    }
+
+    #voiceCallBtn:hover {
+        background: var(--primary);
+    }
+
+    #videoCallBtn {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+    }
+
+    #videoCallBtn:hover {
+        background: var(--primary);
+    }
+
+    @media (max-width: 480px) {
+        .call-controls {
+            right: 8px;
+            gap: 6px;
+        }
+        
+        .call-btn {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .call-btn .feather {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .chat-partner-info {
+            max-width: calc(100% - 90px);
+        }
+    }
+
+    /* Message Reactions - KEPT EXACTLY AS ORIGINAL */
+    .message-reactions {
+        display: flex;
+        gap: 5px;
+        margin-top: 5px;
+        flex-wrap: wrap;
+    }
+    
+    .reaction {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 2px 6px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+    }
+    
+    .reaction-count {
+        font-size: 10px;
+        color: var(--text-secondary);
+    }
+    
+    /* HIDE REACTION PICKER ON ALL PAGES EXCEPT CHAT */
+    #reactionPicker {
+        display: none !important;
+    }
+    
+    /* SHOW IT ONLY ON CHAT PAGE */
+    body.chat-page #reactionPicker {
+        display: none !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: var(--bg-primary) !important;
+        border-radius: 20px 20px 0 0 !important;
+        padding: 20px 15px 30px !important;
+        box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3) !important;
+        z-index: 1001 !important;
+        border: 1px solid var(--border) !important;
+        border-bottom: none !important;
+        max-width: 100vw !important;
+        transform: translateY(100%) !important;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        pointer-events: none !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 15px !important;
+    }
+
+    body.chat-page #reactionPicker[style*="display: flex"] {
+        transform: translateY(0) !important;
+        pointer-events: auto !important;
+        display: flex !important;
+    }
+
+    body.chat-page #reactionPicker::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+        display: none;
+    }
+
+    body.chat-page #reactionPicker[style*="display: flex"]::before {
+        display: block;
+    }
+
+    body.chat-page #reactionPicker .reaction-emoji {
+        font-size: 32px !important;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 12px !important;
+        min-width: 50px !important;
+        min-height: 50px !important;
+        text-align: center;
+        border-radius: 50%;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    body.chat-page #reactionPicker .reaction-emoji:hover {
+        transform: scale(1.2);
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Mobile responsiveness for chat page only */
+    @media (max-width: 768px) {
+        body.chat-page #reactionPicker {
+            padding: 15px 12px 25px !important;
+            gap: 12px !important;
+        }
+        
+        body.chat-page #reactionPicker .reaction-emoji {
+            font-size: 28px !important;
+            min-width: 45px !important;
+            min-height: 45px !important;
+            padding: 10px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        body.chat-page #reactionPicker {
+            padding: 12px 10px 20px !important;
+            border-radius: 15px 15px 0 0 !important;
+            gap: 10px !important;
+        }
+        
+        body.chat-page #reactionPicker .reaction-emoji {
+            font-size: 26px !important;
+            min-width: 40px !important;
+            min-height: 40px !important;
+            padding: 8px !important;
+        }
+    }
+    
+    /* Reply Preview - KEPT EXACTLY AS ORIGINAL */
+    .reply-preview {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-left: 3px solid var(--primary);
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+    }
+    
+    .reply-preview-content {
+        flex: 1;
+        margin-left: 10px;
+        overflow: hidden;
+    }
+    
+    .reply-preview-text {
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--text-secondary);
+    }
+    
+    .reply-preview-name {
+        font-size: 12px;
+        font-weight: bold;
+        color: white;
+    }
+    
+    .reply-preview-cancel {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 5px;
+    }
+    
+    .reply-preview-cancel:hover {
+        color: var(--primary-light);
+    }
+    
+    /* Message context menu - KEPT EXACTLY AS ORIGINAL */
+    .message-context-menu {
+        position: absolute;
+        background: var(--bg-card);
+        border-radius: 8px;
+        box-shadow: var(--shadow-lg);
+        z-index: 100;
+        padding: 8px 0;
+        display: none;
+        border: 1px solid var(--border);
+    }
+    
+    .context-menu-item {
+        padding: 10px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--text-primary);
+    }
+    
+    .context-menu-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Swipe for reply - KEPT EXACTLY AS ORIGINAL */
+    .reply-indicator {
+        font-size: 12px;
+        color: var(--primary-light);
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .reply-message-preview {
+        background: rgba(255, 255, 255, 0.05);
+        border-left: 2px solid var(--primary);
+        padding: 4px 8px;
+        margin-bottom: 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--text-secondary);
+    }
+
+    /* Additional chat-specific styles - KEPT EXACTLY AS ORIGINAL */
+    .typing-indicator {
+        background: var(--bg-card);
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+    }
+
+    .chat-input input {
+        color: var(--text-primary);
+        border: none;
+        background: transparent;
+    }
+
+    .chat-input input::placeholder {
+        color: var(--text-light);
+    }
+
+    /* MODERN CHAT INPUT STYLES - WITH !IMPORTANT (ONLY GLASS EFFECT) */
+    .chat-input-container {
+        padding: 12px 16px !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .chat-input {
+        display: flex !important;
+        align-items: center !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 24px !important;
+        padding: 6px 14px !important;
+        gap: 8px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .chat-input:focus-within {
+        border-color: rgba(230, 57, 134, 0.5) !important;
+        box-shadow: 0 0 0 2px rgba(230, 57, 134, 0.1) !important;
+        background: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .input-controls-left {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .input-controls-right {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .inside-input-btn {
+        background: none !important;
+        border: none !important;
+        color: var(--text-secondary) !important;
+        cursor: pointer !important;
+        padding: 8px !important;
+        border-radius: 50% !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    .inside-input-btn:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+        color: var(--primary-light) !important;
+    }
+
+    .inside-input-btn .feather {
+        width: 20px !important;
+        height: 20px !important;
+        stroke: currentColor !important;
+        stroke-width: 2 !important;
+    }
+
+    #messageInput {
+        flex: 1 !important;
+        background: transparent !important;
+        border: none !important;
+        color: var(--text-primary) !important;
+        font-size: 0.95rem !important;
+        font-family: 'Inter', sans-serif !important;
+        padding: 8px 0 !important;
+        line-height: 1.4 !important;
+        outline: none !important;
+        min-height: 24px !important;
+        max-height: 120px !important;
+    }
+
+    .send-btn {
+        background: var(--primary) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        width: 36px !important;
+        height: 36px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .send-btn:hover:not(:disabled) {
+        background: var(--primary-light) !important;
+        transform: scale(1.05) !important;
+    }
+
+    .send-btn:active:not(:disabled) {
+        transform: scale(0.95) !important;
+    }
+
+    .send-btn:disabled {
+        background: var(--border) !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+    }
+
+    .send-btn .feather {
+        width: 18px !important;
+        height: 18px !important;
+        stroke: white !important;
+        stroke-width: 2.5 !important;
+    }
+
+    .game-icon-btn {
+        background: none !important;
+        border: none !important;
+        color: var(--text-secondary) !important;
+        cursor: pointer !important;
+        padding: 8px !important;
+        border-radius: 50% !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 18px !important;
+    }
+
+    .game-icon-btn:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+        color: var(--primary-light) !important;
+    }
+
+    /* Voice note player styles - KEPT EXACTLY AS ORIGINAL */
+    .voice-note-player {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius);
+        padding: 8px 12px;
+    }
+
+    .voice-progress {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .voice-progress-bar {
+        background: var(--primary);
+    }
+
+    /* Message status indicators - KEPT EXACTLY AS ORIGINAL */
+    .message-status .feather {
+        width: 14px;
+        height: 14px;
+        stroke: var(--text-secondary);
+    }
+
+    /* Online status indicator - KEPT EXACTLY AS ORIGINAL */
+    .online-status .feather {
+        width: 8px;
+        height: 8px;
+        stroke: var(--primary-light);
+        stroke-width: 3;
+    }
+
+    /* Voice note indicator buttons - KEPT EXACTLY AS ORIGINAL */
+    .voice-note-btn .feather {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+    }
+
+    .voice-note-btn:hover .feather {
+        stroke: white;
+    }
+
+    /* GLASS LIQUID TRANSPARENT EFFECT FOR CHAT HEADER - WITH !IMPORTANT */
+    .chat-header {
+        display: flex !important;
+        align-items: center !important;
+        padding: 15px 20px !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* BACK BUTTON - STYLED TO MATCH GLASS EFFECT */
+    .back-btn {
+        color: var(--text-primary) !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 50% !important;
+        width: 40px !important;
+        height: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-right: 10px !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        flex-shrink: 0 !important;
+    }
+
+    .back-btn:hover {
+        background: rgba(255, 255, 255, 0.25) !important;
+        color: var(--primary-light) !important;
+        transform: scale(1.05) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .back-btn .feather {
+        width: 20px !important;
+        height: 20px !important;
+        stroke: currentColor !important;
+    }
+
+    .chat-partner-info {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        flex: 1 !important;
+    }
+
+    #chatPartnerImage {
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+        border: 2px solid var(--primary) !important;
+    }
+
+    .chat-partner-info > div {
+        flex: 1 !important;
+    }
+
+    #chatPartnerName {
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+        margin-bottom: 3px !important;
+    }
+
+    .online-status {
+        font-size: 0.85rem !important;
+        color: var(--text-light) !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+    }
+
+    .call-controls {
+        display: flex !important;
+        gap: 10px !important;
+        margin-left: auto !important;
+    }
+
+    .call-btn .feather {
+        width: 18px !important;
+        height: 18px !important;
+        stroke: currentColor !important;
+    }
+
+    /* ===== ONLY TIMESTAMP FIX - MINIMAL CHANGE ===== */
+    /* Make timestamp stay on same line for short messages */
+    .message-content {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: baseline !important;
+        gap: 4px !important;
+    }
+    
+    .message-text {
+        display: inline !important;
+    }
+    
+    .message-time {
+        display: inline-flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        margin-left: auto !important;
+        font-size: 0.7rem !important;
+        opacity: 0.7 !important;
+        flex-shrink: 0 !important;
+        /* Don't add any margins that affect spacing */
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        margin-right: 0 !important;
+        /* Original colors preserved */
+    }
+    
+    /* Keep original message colors */
+    .message.sent .message-time {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    .message.received .message-time {
+        color: var(--text-light) !important;
+    }
+    /* ===== END OF TIMESTAMP FIX ===== */
+
+    /* Chat Messages Area - Keep original */
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        /* Don't add gap here - let original styles handle spacing */
+    }
+
+    /* Responsive adjustments for timestamp only */
+    @media (max-width: 768px) {
+        .message-time {
+            font-size: 0.65rem !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .message-time {
+            font-size: 0.6rem !important;
+        }
+    }
+
+    /* Responsive adjustments for header */
+    @media (max-width: 768px) {
+        .chat-header {
+            padding: 12px 15px !important;
+        }
+        
+        .back-btn {
+            width: 36px !important;
+            height: 36px !important;
+        }
+        
+        .chat-input-container {
+            padding: 10px 12px !important;
+        }
+        
+        .chat-input {
+            padding: 4px 12px !important;
+        }
+        
+        .inside-input-btn, .game-icon-btn {
+            width: 32px !important;
+            height: 32px !important;
+            padding: 6px !important;
+        }
+        
+        .inside-input-btn .feather {
+            width: 18px !important;
+            height: 18px !important;
+        }
+        
+        .send-btn {
+            width: 32px !important;
+            height: 32px !important;
+        }
+        
+        .send-btn .feather {
+            width: 16px !important;
+            height: 16px !important;
+        }
+        
+        #messageInput {
+            font-size: 0.9rem !important;
+        }
+        
+        #chatPartnerImage {
+            width: 45px !important;
+            height: 45px !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .chat-header {
+            padding: 10px 12px !important;
+        }
+        
+        .back-btn {
+            width: 32px !important;
+            height: 32px !important;
+            margin-right: 8px !important;
+        }
+        
+        .chat-input-container {
+            padding: 8px 10px !important;
+        }
+        
+        .chat-input {
+            padding: 3px 10px !important;
+            border-radius: 20px !important;
+        }
+        
+        .chat-messages {
+            padding: 12px;
+        }
+        
+        .inside-input-btn, .game-icon-btn {
+            width: 28px !important;
+            height: 28px !important;
+            padding: 5px !important;
+        }
+        
+        .inside-input-btn .feather {
+            width: 16px !important;
+            height: 16px !important;
+        }
+        
+        .send-btn {
+            width: 28px !important;
+            height: 28px !important;
+        }
+        
+        .send-btn .feather {
+            width: 14px !important;
+            height: 14px !important;
+        }
+        
+        #messageInput {
+            font-size: 0.85rem !important;
+            padding: 6px 0 !important;
+            min-height: 20px !important;
+        }
+        
+        #chatPartnerImage {
+            width: 40px !important;
+            height: 40px !important;
+        }
+        
+        #chatPartnerName {
+            font-size: 1rem !important;
+        }
+    }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <button class="back-btn" id="backToMessages">
+                <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </button>
+            <div class="chat-partner-info">
+                <img src="images-default-profile.jpg" alt="Profile" id="chatPartnerImage">
+                <div>
+                    <h3 id="chatPartnerName">Loading..</h3>
+                    <p class="online-status" id="chatPartnerStatus">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        Online
+                    </p>
+                </div>
+                <!-- Call Controls -->
+                <div id="callControls" class="call-controls">
+                    <button id="voiceCallBtn" class="call-btn">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </button>
+                    <button id="videoCallBtn" class="call-btn">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be loaded here -->
+        </div>
+        
+        <!-- Reaction Picker will be created by app.js -->
+        
+        <div class="chat-input-container">
+            <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                <span id="partnerNameTyping">Partner</span> is typing...
+            </div>
+            
+            <!-- Reply Preview -->
+            <div id="replyPreview" class="reply-preview" style="display: none;">
+                <div class="reply-preview-content">
+                    <div class="reply-preview-name"></div>
+                    <div class="reply-preview-text"></div>
+                </div>
+                <button id="cancelReply" class="reply-preview-cancel">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Voice note recording indicator -->
+            <div class="voice-note-indicator" id="voiceNoteIndicator">
+                <div class="voice-note-timer" id="voiceNoteTimer">0:00</div>
+                <div class="voice-note-controls">
+                    <button class="voice-note-btn" id="cancelVoiceNoteBtn">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="voice-note-btn" id="sendVoiceNoteBtn">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- MODERN CHAT INPUT -->
+            <div class="chat-input">
+                <!-- Left side controls (inside input) -->
+                <div class="input-controls-left">
+                    <!-- Attachment button -->
+                    <button class="inside-input-btn" id="attachmentBtn" title="Attach file">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Voice note button -->
+                    <button class="inside-input-btn" id="voiceNoteBtn" title="Record voice note">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+                    
+                    <!-- Game button -->
+                    <button id="gameInviteBtn" class="game-icon-btn" title="Play Games">
+                        👾
+                    </button>
+                </div>
+                
+                <!-- Main text input -->
+                <input type="text" id="messageInput" placeholder="Type a message...">
+                
+                <!-- Right side controls (inside input) -->
+                <div class="input-controls-right">
+                    <!-- You could add more buttons here if needed -->
+                </div>
+                
+                <!-- Send button -->
+                <button class="send-btn" id="sendMessageBtn" title="Send message">
+                    <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden file input -->
+    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+
+    <script type="module" src="app.js"></script>
+    <script type="module" src="additional.js"></script>
+    <script type="module" src="chat.js"></script>
+    <script src="fix.js"></script>
+    <script src="fli.js"></script>
+    <script src="smoot.js"></script>
+    <script type="module" src="call.js"></script>
+    <script type="module" src="pic.js"></script>
+    <script type="module" src="chattin.js"></script>
+    <script type="module" src="game.js"></script>
+
+    <!-- SIMPLE FIX: Add chat-page class to body and handle reaction picker -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+        
+        document.body.classList.add('chat-page');
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'style') {
+                    const picker = document.getElementById('reactionPicker');
+                    if (picker && picker.style.display === 'flex') {
+                        const closeOnClick = function(e) {
+                            if (!picker.contains(e.target)) {
+                                picker.style.display = 'none';
+                                document.removeEventListener('click', closeOnClick);
+                            }
+                        };
+                        
+                        setTimeout(() => {
+                            document.addEventListener('click', closeOnClick);
+                        }, 10);
+                    }
+                }
+            });
+        });
+        
+        const picker = document.getElementById('reactionPicker');
+        if (picker) {
+            observer.observe(picker, { attributes: true });
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const picker = document.getElementById('reactionPicker');
+                if (picker && picker.style.display === 'flex') {
+                    picker.style.display = 'none';
+                }
+            }
+        });
+        
+        const attachmentBtn = document.getElementById('attachmentBtn');
+        const fileInput = document.getElementById('imageUpload');
+        
+        if (attachmentBtn && fileInput) {
+            attachmentBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+        }
+    });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const gameBtn = document.getElementById('gameInviteBtn');
+        if (gameBtn) {
+            gameBtn.addEventListener('click', function() {
+                const chatPartnerId = window.chatPartnerId;
+                const chatPartnerName = document.getElementById('chatPartnerName')?.textContent || 'Opponent';
+                
+                if (chatPartnerId && window.gameManager) {
+                    window.gameManager.showGameSelectionModal(chatPartnerId, chatPartnerName);
+                }
+            });
+        }
+    });
+    
+    function openGameSelection() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const chatPartnerId = urlParams.get('id');
+        
+        let chatPartnerName = 'Opponent';
+        const partnerNameElement = document.getElementById('chatPartnerName');
+        if (partnerNameElement) {
+            chatPartnerName = partnerNameElement.textContent || 'Opponent';
+        }
+        
+        if (chatPartnerId && window.gameManager) {
+            window.gameManager.showGameSelectionModal(chatPartnerId, chatPartnerName);
+        } else {
+            alert('Please start a chat with someone first or wait for game system to load');
+        }
+    }
+    </script>
+</body>
+</html>

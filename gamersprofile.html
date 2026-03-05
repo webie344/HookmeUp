@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamer Profile - Bondbase</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #b3004b;
+            --primary-dark: #7a0034;
+            --primary-light: #e63986;
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --bg-card: #1a1a1a;
+            --border: #2e2e2e;
+            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+            --radius-lg: 24px;
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0b0b0b 0%, #141414 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        /* Compact Profile Card */
+        .compact-profile-card {
+            max-width: 600px;
+            width: 100%;
+            background: linear-gradient(145deg, #1a1a1a 0%, #222222 100%);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .compact-profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(179, 0, 75, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header Section */
+        .card-header {
+            display: flex;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .profile-avatar {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(179, 0, 75, 0.3);
+        }
+
+        .profile-avatar::after {
+            content: '🎮';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            border: 2px solid var(--bg-card);
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .gamer-tag {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(45deg, var(--primary-light), #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .game-platform {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-platform i {
+            color: var(--primary-light);
+        }
+
+        /* Badges Row */
+        .badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .badge.style {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .badge.rank {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: #333;
+        }
+
+        /* Stats Grid - 3 columns */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-icon {
+            font-size: 0.9rem;
+            color: var(--primary-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* Info Cards - 2 columns */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .info-card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .info-card-title i {
+            color: var(--primary-light);
+            font-size: 0.8rem;
+        }
+
+        .info-card-content {
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .tag {
+            background: rgba(179, 0, 75, 0.2);
+            color: var(--primary-light);
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        /* Achievement preview */
+        .achievement-preview {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.35rem;
+        }
+
+        .achievement-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700;
+            font-size: 0.7rem;
+        }
+
+        .achievement-text {
+            font-size: 0.8rem;
+            color: white;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.6rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(179, 0, 75, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            .compact-profile-card {
+                padding: 1rem;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="compact-profile-card" id="compactProfileCard">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Loading gamer profile...</p>
+        </div>
+
+        <!-- Profile Content (Loaded by JavaScript) -->
+        <div id="profileContent" style="display: none;">
+            <!-- Header -->
+            <div class="card-header">
+                <div class="profile-avatar">
+                    <img id="profileAvatar" src="images-default-profile.jpg" alt="Profile">
+                </div>
+                <div class="header-info">
+                    <h2 class="gamer-tag" id="gamerTagDisplay">ShadowHunter</h2>
+                    <div class="game-platform" id="gameInfo">
+                        <i class="fas fa-gamepad"></i>
+                        <span id="gamePlatformText">PC • Competitive</span>
+                    </div>
+                    <div class="badges-row" id="gamerBadges">
+                        <span class="badge"><i class="fas fa-crown"></i> Veteran</span>
+                        <span class="badge style"><i class="fas fa-bolt"></i> Aggressive</span>
+                        <span class="badge rank"><i class="fas fa-star"></i> Diamond III</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid" id="quickStats">
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-label">Hours</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="stat-value">89</div>
+                    <div class="stat-label">Wins</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-value">2.4</div>
+                    <div class="stat-label">K/D</div>
+                </div>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="info-cards">
+                <!-- Gaming Preferences -->
+                <div class="info-card">
+                    <div class="info-card-title">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Preferences</span>
+                    </div>
+                    <div class="info-card-content">
+                        <div><strong>Role:</strong> Damage/Support</div>
+                        <div><strong>Playstyle:</strong> Aggressive</div>
+                        <div class="tags" style="margin-top: 0.35rem;">
+                            <span class="tag">FPS</span>
+                            <span class="tag">Battle Royale</span>
+                            <span class="tag">Ranked</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Achievement -->
+                <div class="info-card">
+                    <div class="info-card-title">
+                        <i class="fas fa-trophy"></i>
+                        <span>Latest Achievement</span>
+                    </div>
+                    <div class="info-card-content">
+                        <div class="achievement-preview">
+                            <div class="achievement-icon">
+                                <i class="fas fa-medal"></i>
+                            </div>
+                            <div class="achievement-text">Tournament Winner '24</div>
+                        </div>
+                        <div class="tags" style="margin-top: 0.35rem;">
+                            <span class="tag">+5 more</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button id="contactGamerBtn" class="btn btn-primary">
+                    <i class="fas fa-envelope"></i> Message
+                </button>
+                <button id="shareProfileBtn" class="btn btn-secondary">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display: none; text-align: center; padding: 2rem;">
+            <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+            <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Profile Not Found</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">The profile you're looking for doesn't exist.</p>
+            <button onclick="window.location.href='mingle.html'" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-users"></i> Browse Gamers
+            </button>
+        </div>
+    </div>
+
+    <!-- Link to games.js -->
+    <script type="module" src="games.js"></script>
+
+    <!-- Copy URL functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading state, show profile content
+            setTimeout(() => {
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('profileContent').style.display = 'block';
+            }, 500);
+
+            // Share profile
+            const shareBtn = document.getElementById('shareProfileBtn');
+            if (shareBtn) {
+                shareBtn.addEventListener('click', function() {
+                    const gamerTag = document.getElementById('gamerTagDisplay')?.textContent || 'Gamer';
+                    
+                    if (navigator.share) {
+                        navigator.share({
+                            title: `${gamerTag}'s Gamer Profile`,
+                            text: `Check out ${gamerTag}'s gaming profile on Bondbase!`,
+                            url: window.location.href
+                        }).catch(err => {
+                            console.error('Share failed:', err);
+                        });
+                    } else {
+                        // Fallback to copying URL
+                        const profileUrl = window.location.href;
+                        navigator.clipboard.writeText(profileUrl).then(() => {
+                            showNotification('Profile URL copied!');
+                        });
+                    }
+                });
+            }
+
+            // Copy profile URL (if copy button exists)
+            const copyBtn = document.getElementById('copyProfileUrlBtn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    const profileUrl = window.location.href;
+                    navigator.clipboard.writeText(profileUrl).then(() => {
+                        showNotification('Profile URL copied to clipboard!');
+                    });
+                });
+            }
+        });
+
+        function showNotification(message) {
+            // Simple notification
+            alert(message);
+        }
+    </script>
+</body>
+</html>
